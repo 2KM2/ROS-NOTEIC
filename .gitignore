@@ -1,0 +1,14 @@
+# catkin 产物
+build/
+devel/
+install/
+logs/
+.catkin_workspace
+# catkin_make 生成的 toplevel.cmake 符号链接
+src/CMakeLists.txt
+
+# 预编译二进制,不入库(catkin_make 会重新生成到 devel/lib/)
+src/hw_1/src/rviz_plugins/lib/
+*.so
+*.o
+*.a
