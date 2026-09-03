@@ -216,5 +216,7 @@ WS_SUBDIR=src/hw_1 ./build_ws.sh    # 改成以 src/hw_1 为工作空间根
 `registerPlugin<...>` 都在;`rviz -d rviz_plugins/config/rviz_config.rviz` 零报错,
 `/proc/<pid>/maps` 确认加载的是 `devel/lib/librviz_plugins.so`;`catkin_make install` 通过。
 
-> 仓库里还留着一个旧的预编译 `src/hw_1/src/rviz_plugins/lib/librviz_plugins.so`
-> (已 gitignore)。它不会被加载,pluginlib 用的是 `devel/lib/` 下新编的那个。
+作业原来自带的预编译 `src/hw_1/src/rviz_plugins/lib/librviz_plugins.so` 已删除
+—— `plugin_description.xml` 里的 `<library path="lib/librviz_plugins">` 是 pluginlib
+的标准相对路径,解析的是 catkin 的 lib 目录(`devel/lib`),不是包源码目录,
+所以那个文件从来没被加载过。
