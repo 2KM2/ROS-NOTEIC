@@ -13,7 +13,7 @@ ROS_NOETIC/                  <- 仓库根,挂载为容器内 /workspace,同时�
 │   ├── x11_setup.sh         <- 生成容器可用的 X11 cookie
 │   ├── docker-compose.yml
 │   ├── build_image.sh       <- 构建镜像
-│   ├── run.sh               <- 进容器 / 在容器里执行命令
+│   ├── run.sh               <- 进容器(常驻,exit 不删)/ 在容器里执行命令
 │   └── build_ws.sh          <- 一键编译
 └── src/                     <- source space
     └── hw_1/src/
@@ -62,16 +62,29 @@ rviz -d $(rospack find grid_path_searcher)/launch/rviz_config/demo.rviz
 
 然后在 rviz 里用 `3D Nav Goal` 工具点目标点。
 
-## 什么会丢、什么不会丢
+## 容器生命周期(常驻,exit 不会删)
 
-`run.sh` 用的是 `docker run --rm`,容器退出即删除。但:
+容器本体跑的是 `sleep infinity`,`./run.sh` 的每个 shell 都是 `docker exec` 进去的。
+所以 `exit` 只结束你这个 shell,容器和里面的 tmux / 后台节点继续在跑:
 
-| 东西 | 位置 | 容器退出后 |
-|---|---|---|
-| 源码、`build/`、`devel/` | 宿主机(`../:/workspace` 是 bind mount) | **不丢** |
-| 镜像 `ros_noetic_hw:latest` | 本地 docker | **不丢**(`--rm` 只删容器) |
-| 在容器里 `apt install` 的包 | 容器可写层 | **会丢** |
-| `~/.ros/log`、mesa shader 缓存 | 容器可写层 | 会丢(无所谓) |
+```bash
+./run.sh                 # 不存在就创建;已停止就 start;在跑就直接 exec 进去
+./run.sh --recreate      # 销毁重建(改了镜像或挂载后用)
+docker stop ros_noetic_hw   # 手动停(下次 ./run.sh 自动 start)
+docker rm -f ros_noetic_hw  # 彻底删
+```
+
+`--restart unless-stopped`:开机 / docker 重启后容器自动回来,除非你自己 `docker stop` 过。
+
+### 什么会丢、什么不会丢
+
+| 东西 | 位置 | `exit` 后 | 容器被删后 |
+|---|---|---|---|
+| 源码、`build/`、`devel/` | 宿主机(`../:/workspace` 是 bind mount) | 不丢 | **不丢** |
+| 镜像 `ros_noetic_hw:latest` | 本地 docker | 不丢 | **不丢** |
+| tmux session、后台 roscore | 容器内存 | **不丢** | 会丢 |
+| 在容器里 `apt install` 的包 | 容器可写层 | 不丢 | **会丢** |
+| `~/.ros/log`、mesa shader 缓存 | 容器可写层 | 不丢 | 会丢(无所谓) |
 
 所以**唯一需要操心的是临时装的包**。做法是加进 Dockerfile 然后 `./build_image.sh`,
 **不要用 `docker commit`** —— commit 出来的层无法从 Dockerfile 重建,下次 build 就丢了,
@@ -81,8 +94,8 @@ rviz -d $(rospack find grid_path_searcher)/launch/rviz_config/demo.rviz
 docker diff ros_noetic_hw | grep -E 'usr/(bin|lib)|var/lib/dpkg/info'
 ```
 
-镜像改过之后,已经在跑的老容器不会自动更新;`run.sh` 会打 `[warn] ... 正在运行的是旧镜像`
-提醒你。退出那个容器再 `./run.sh` 即可用上新镜像。
+镜像改过之后,已有容器不会自动更新;`run.sh` 会打 `[warn] 容器用的是旧镜像`
+提醒你,执行 `./run.sh --recreate` 换过去。
 
 ### 离线备份 / 迁移到别的机器(可选)
 
@@ -159,6 +172,18 @@ WS_SUBDIR=src/hw_1 ./build_ws.sh    # 改成以 src/hw_1 为工作空间根
 ### 5. `QStandardPaths: XDG_RUNTIME_DIR not set`
 
 `ros_env.sh` 里自动建 `/tmp/runtime-$(id -un)` 并 `chmod 700`。
+
+### 6. 常驻容器 + 单文件 bind mount 的 inode 陷阱
+
+`-v /tmp/.docker.xauth:/tmp/.docker.xauth` 绑的是 **inode**,不是路径。
+`x11_setup.sh` 每次运行都会重写这个文件,而 `rm + touch`、以及 `xauth nmerge`
+自己的 write-then-rename,都会换掉 inode —— 容器创建时绑的老 inode 还在,
+容器里看到的就永远是那份旧内容(重启宿主机后就是个空文件)→ rviz 又报
+`Authorization required`。
+
+修法:cookie 先写到临时文件,最后用 `cat tmp > /tmp/.docker.xauth` **原地覆写**。
+`DISPLAY`/`XAUTHORITY` 则在每次 `docker exec` 时重新 `-e` 传进去,
+所以宿主机换了图形会话也不用重建容器。
 
 ## 一个源码遗留问题(不影响作业,没动)
 

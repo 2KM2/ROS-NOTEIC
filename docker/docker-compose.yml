@@ -13,6 +13,8 @@ services:
     # 自定义主机名解析不了会让 roscore 起不来。
     stdin_open: true
     tty: true
+    init: true
+    restart: unless-stopped
     network_mode: host
     ipc: host
     environment:
@@ -30,4 +32,5 @@ services:
     devices:
       - /dev/dri:/dev/dri
     working_dir: /workspace
-    command: bash
+    # 和 run.sh 一致:容器常驻,shell 一律 docker exec 进去,exit 不影响容器
+    command: sleep infinity

@@ -58,10 +58,11 @@ done < <(ls -t /run/user/"$(id -u)"/.mutter-Xwaylandauth.* 2>/dev/null)
 
 # ---------- 3. 挑出真正能连上 $DISPLAY 的那个,写成 FamilyWild(ffff) ----------
 # 必须只写有效 cookie:同一个 display 塞多条不同 cookie 会让 Xlib 用错那条。
-rm -f "$XAUTH_OUT"
-touch "$XAUTH_OUT"
-chmod 644 "$XAUTH_OUT"
-
+#
+# 注意 inode:容器是常驻的,-v $XAUTH_OUT:$XAUTH_OUT 绑的是 inode,不是路径。
+# `rm + touch` 或 `xauth nmerge`(内部 write-then-rename)都会换掉 inode,
+# 容器里就会一直看到那份旧的空文件 -> rviz 报 Authorization required。
+# 所以:先在临时文件里生成,最后用 `cat >` 原地覆写,保住 inode。
 GOOD_FILE=""
 CAN_VALIDATE=0
 command -v xset >/dev/null 2>&1 && CAN_VALIDATE=1
@@ -81,12 +82,16 @@ for f in "${CANDIDATES[@]}"; do
   fi
 done
 
+XAUTH_TMP=$(mktemp /tmp/.docker.xauth.gen.XXXXXX)
 if [ -n "$GOOD_FILE" ]; then
   XAUTHORITY="$GOOD_FILE" xauth nlist 2>/dev/null \
     | sed -e 's/^..../ffff/' \
-    | xauth -f "$XAUTH_OUT" nmerge - 2>/dev/null || true
+    | xauth -f "$XAUTH_TMP" nmerge - 2>/dev/null || true
 fi
 
+# 原地覆写(不 rm、不 mv),保留 inode
+cat "$XAUTH_TMP" > "$XAUTH_OUT"
+rm -f "$XAUTH_TMP" "$XAUTH_TMP-c" "$XAUTH_TMP-l" "$XAUTH_TMP-n"
 chmod 644 "$XAUTH_OUT"
 
 if [ ! -s "$XAUTH_OUT" ]; then
