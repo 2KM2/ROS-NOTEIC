@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>multi_map_server</name>
+  <version>0.0.0</version>
+  <description>
+    MultiOccupancyGrid 消息定义。原作者的 multi_map_server 包没有随作业一起发下来,
+    而 rviz_plugins/multi_probmap_display 需要它,ROS Noetic 的 apt 源里也没有,
+    所以这里补一个只含消息的最小包(定义按 multi_probmap_display.cpp 的字段用法还原)。
+  </description>
+  <maintainer email="todo@todo.todo">todo</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+</package>

@@ -6,8 +6,11 @@ project(rviz_plugins)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rviz
-  #multi_map_server
+  multi_map_server
   roscpp
+  nav_msgs
+  tf
+  pluginlib
 )
 
 ###################################
@@ -21,8 +24,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES irobot_msgs
-  CATKIN_DEPENDS #multi_map_server
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS rviz multi_map_server roscpp nav_msgs tf pluginlib
 #  DEPENDS system_lib
 )
 
@@ -56,9 +59,9 @@ add_definitions(-DQT_NO_KEYWORDS)
 ## Qt's meta-object compiler.
 qt5_wrap_cpp(MOC_FILES
   src/goal_tool.h
-#  src/probmap_display.h
-#  src/aerialmap_display.h    
-#  src/multi_probmap_display.h      
+  src/probmap_display.h
+  src/aerialmap_display.h
+  src/multi_probmap_display.h
 )
 
 ## Here we specify the list of source files, including the output of
@@ -66,9 +69,9 @@ qt5_wrap_cpp(MOC_FILES
 set(SOURCE_FILES
   src/pose_tool.cpp
   src/goal_tool.cpp
-#  src/probmap_display.cpp
-#  src/aerialmap_display.cpp   
-#  src/multi_probmap_display.cpp  
+  src/probmap_display.cpp
+  src/aerialmap_display.cpp
+  src/multi_probmap_display.cpp
   ${MOC_FILES}
 )
 
@@ -82,7 +85,10 @@ include_directories(
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
+# multi_map_server 的消息头文件是生成的,必须先生成再编译本包
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES} ${catkin_LIBRARIES})
 
 install(TARGETS
   ${PROJECT_NAME}
@@ -95,8 +101,14 @@ install(FILES
   plugin_description.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(DIRECTORY media/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/media)
+# media/ 和 icons/ 这两个目录本包里没有,install(DIRECTORY) 对不存在的目录会让
+# `catkin_make install` 直接报 CMake Error,所以加存在性判断。
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/media)
+  install(DIRECTORY media/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/media)
+endif()
 
-install(DIRECTORY icons/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/icons)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/icons)
+  install(DIRECTORY icons/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/icons)
+endif()

@@ -19,10 +19,11 @@ ROS_NOETIC/                  <- 仓库根,挂载为容器内 /workspace,同时�
     └── hw_1/src/
         ├── grid_path_searcher
         ├── waypoint_generator
-        └── rviz_plugins
+        ├── rviz_plugins
+        └── multi_map_server   <- 补的消息包(见下文 rviz_plugins 一节)
 ```
 
-catkin 会在 `src/` 下递归查找 `package.xml`,所以三个包嵌在 `src/hw_1/src/` 里也能正常发现
+catkin 会在 `src/` 下递归查找 `package.xml`,所以这些包嵌在 `src/hw_1/src/` 里也能正常发现
 (`rospack find grid_path_searcher` → `/workspace/src/hw_1/src/grid_path_searcher`)。
 
 ## 快速开始
@@ -185,16 +186,35 @@ WS_SUBDIR=src/hw_1 ./build_ws.sh    # 改成以 src/hw_1 为工作空间根
 `DISPLAY`/`XAUTHORITY` 则在每次 `docker exec` 时重新 `-e` 传进去,
 所以宿主机换了图形会话也不用重建容器。
 
-## 一个源码遗留问题(不影响作业,没动)
+## rviz_plugins 的三个 Display —— 已补齐编译
 
-`rviz_plugins/plugin_description.xml` 声明了 `ProbMapDisplay` / `AerialMapDisplay` /
-`MultiProbMapDisplay` 三个类,但 `CMakeLists.txt` 里对应的 `.cpp` 全被注释掉了没编译。
-所以加载 `rviz_plugins/config/rviz_config.rviz` 时会报三条:
+原来 `plugin_description.xml` 声明了 `ProbMapDisplay` / `AerialMapDisplay` /
+`MultiProbMapDisplay`,但 `CMakeLists.txt` 里对应的 `.cpp` 和 moc 头全被注释掉了,
+加载 `rviz_plugins/config/rviz_config.rviz` 会报三条
+`PluginlibFactory: The plugin for class '...' failed to load.`
 
-```
-PluginlibFactory: The plugin for class 'rviz_plugins/ProbMapDisplay' failed to load.
-```
+现在四个类都真编进 `librviz_plugins.so` 了。改动:
 
-作业实际用的 `grid_path_searcher/launch/rviz_config/demo.rviz` 不需要这三个 Display,
-加载零报错。要消掉这些报错,把 plugin_description.xml 里那三个 `<class>` 删掉,
-或在 CMakeLists 里把对应源文件放回 `SOURCE_FILES`。
+1. `rviz_plugins/CMakeLists.txt`:三个 `.cpp` 放回 `SOURCE_FILES`、三个 `.h` 放回
+   `qt5_wrap_cpp`;`find_package` 补 `multi_map_server nav_msgs tf pluginlib`;
+   `target_link_libraries` 补 `${catkin_LIBRARIES}`;加
+   `add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})`
+   —— 否则 clean build 时消息头还没生成就开始编本包。
+2. **新建 `src/hw_1/src/multi_map_server`**:`multi_probmap_display.h` 要
+   `multi_map_server/MultiOccupancyGrid.h`,而这个包作业里没给、Noetic 的 apt 源里也没有。
+   按 `multi_probmap_display.cpp` 的字段用法还原成一个只含消息的最小包:
+
+   ```
+   nav_msgs/OccupancyGrid[] maps
+   geometry_msgs/Pose[] origins
+   ```
+
+3. `install(DIRECTORY media/ icons/)` 指向的目录本包里不存在,`catkin_make install`
+   会直接 CMake Error。加了 `if(EXISTS ...)` 判断。
+
+验证:clean 全量编译零 error;`nm -DC devel/lib/librviz_plugins.so` 四个
+`registerPlugin<...>` 都在;`rviz -d rviz_plugins/config/rviz_config.rviz` 零报错,
+`/proc/<pid>/maps` 确认加载的是 `devel/lib/librviz_plugins.so`;`catkin_make install` 通过。
+
+> 仓库里还留着一个旧的预编译 `src/hw_1/src/rviz_plugins/lib/librviz_plugins.so`
+> (已 gitignore)。它不会被加载,pluginlib 用的是 `devel/lib/` 下新编的那个。
