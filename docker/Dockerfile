@@ -46,8 +46,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-noetic-rqt-common-plugins \
     && rm -rf /var/lib/apt/lists/*
 
-# GUI / X11 调试工具:xdpyinfo、xset、xhost、glxinfo、xeyes
+# 顺手工具 + GUI/X11 调试:xdpyinfo、xset、xhost、glxinfo、xeyes
+# 在容器里临时 apt install 的东西一律加到这里,别用 docker commit —— 那样镜像就跟
+# Dockerfile 对不上了,重建一次就丢。
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        tmux \
         x11-utils \
         x11-xserver-utils \
         x11-apps \

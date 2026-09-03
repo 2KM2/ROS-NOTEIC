@@ -62,6 +62,39 @@ rviz -d $(rospack find grid_path_searcher)/launch/rviz_config/demo.rviz
 
 然后在 rviz 里用 `3D Nav Goal` 工具点目标点。
 
+## 什么会丢、什么不会丢
+
+`run.sh` 用的是 `docker run --rm`,容器退出即删除。但:
+
+| 东西 | 位置 | 容器退出后 |
+|---|---|---|
+| 源码、`build/`、`devel/` | 宿主机(`../:/workspace` 是 bind mount) | **不丢** |
+| 镜像 `ros_noetic_hw:latest` | 本地 docker | **不丢**(`--rm` 只删容器) |
+| 在容器里 `apt install` 的包 | 容器可写层 | **会丢** |
+| `~/.ros/log`、mesa shader 缓存 | 容器可写层 | 会丢(无所谓) |
+
+所以**唯一需要操心的是临时装的包**。做法是加进 Dockerfile 然后 `./build_image.sh`,
+**不要用 `docker commit`** —— commit 出来的层无法从 Dockerfile 重建,下次 build 就丢了,
+镜像和 Dockerfile 也会越走越远。想知道容器里比镜像多了什么:
+
+```bash
+docker diff ros_noetic_hw | grep -E 'usr/(bin|lib)|var/lib/dpkg/info'
+```
+
+镜像改过之后,已经在跑的老容器不会自动更新;`run.sh` 会打 `[warn] ... 正在运行的是旧镜像`
+提醒你。退出那个容器再 `./run.sh` 即可用上新镜像。
+
+### 离线备份 / 迁移到别的机器(可选)
+
+```bash
+./save_image.sh                       # -> ~/docker-images/ros_noetic_hw.tar.gz
+OUT_DIR=/mnt/usb ./save_image.sh      # 换目录
+./load_image.sh [归档路径]            # 恢复
+```
+
+平时不需要 —— Dockerfile 已入库,`./build_image.sh` 随时能重建(base 镜像在本地的话约 2 分钟)。
+归档只在断网、重装、或换一台没网的机器时有用。
+
 ## 换工作空间根目录
 
 只改 `ws_config.sh` 一处,或临时用环境变量:
