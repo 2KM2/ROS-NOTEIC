@@ -1,0 +1,88 @@
+<launch>
+  <!-- ============ A* 教学 demo ============
+       roslaunch astar_tutorial astar_demo.launch
+       常用变体：
+         roslaunch astar_tutorial astar_demo.launch heuristic:=zero          # 看 Dijkstra 摊大饼
+         roslaunch astar_tutorial astar_demo.launch heuristic:=manhattan     # 8邻域下故意选错，看警告 + 次优路径
+         roslaunch astar_tutorial astar_demo.launch weight:=3.0              # Weighted A*
+         roslaunch astar_tutorial astar_demo.launch map_type:=maze
+         roslaunch astar_tutorial astar_demo.launch map_width:=20 map_height:=14 \
+                   map_resolution:=1.0 show_cost_text:=true replay_rate:=3   # 小地图 + 数值标签
+  -->
+
+  <!-- 地图 -->
+  <arg name="map_type"       default="walls"/>   <!-- empty | random | walls | maze -->
+  <arg name="map_width"      default="60"/>
+  <arg name="map_height"     default="40"/>
+  <arg name="map_resolution" default="0.5"/>
+  <arg name="obstacle_ratio" default="0.18"/>
+  <arg name="map_seed"       default="2026"/>
+
+  <!-- A* 参数 -->
+  <arg name="heuristic"      default="diagonal"/>  <!-- zero | manhattan | euclidean | diagonal -->
+  <arg name="use_8_connected" default="true"/>
+  <arg name="allow_corner_cutting" default="false"/>
+  <arg name="tie_breaker"    default="1.0"/>
+  <arg name="weight"         default="1.0"/>
+
+  <!-- 回放 -->
+  <arg name="replay_rate"    default="60.0"/>   <!-- 步/秒 -->
+  <arg name="auto_play"      default="true"/>
+  <arg name="show_cost_text" default="false"/>  <!-- 每格显示 g/h/f，地图小的时候再开 -->
+
+  <arg name="rviz"           default="true"/>
+  <!-- 键盘节点要独占一个终端的 stdin，没法跟 roslaunch 挤在一个终端里，
+       所以默认不启动。用法见下面的注释。 -->
+  <arg name="keyboard"       default="false"/>
+
+  <node pkg="astar_tutorial" type="astar_rviz_node" name="astar_rviz_node" output="screen"
+        required="true">
+    <param name="frame_id"                 value="map"/>
+
+    <param name="map/type"                 value="$(arg map_type)"/>
+    <param name="map/width"                value="$(arg map_width)"/>
+    <param name="map/height"               value="$(arg map_height)"/>
+    <param name="map/resolution"           value="$(arg map_resolution)"/>
+    <param name="map/obstacle_ratio"       value="$(arg obstacle_ratio)"/>
+    <param name="map/num_walls"            value="5"/>
+    <param name="map/wall_gap"             value="2"/>
+    <param name="map/seed"                 value="$(arg map_seed)"/>
+    <param name="map/inflate_radius"       value="0"/>
+    <param name="map/border"               value="true"/>
+
+    <param name="astar/heuristic"          value="$(arg heuristic)"/>
+    <param name="astar/use_8_connected"    value="$(arg use_8_connected)"/>
+    <param name="astar/allow_corner_cutting" value="$(arg allow_corner_cutting)"/>
+    <param name="astar/tie_breaker"        value="$(arg tie_breaker)"/>
+    <param name="astar/weight"             value="$(arg weight)"/>
+    <param name="astar/max_iterations"     value="0"/>
+
+    <param name="replay/rate"              value="$(arg replay_rate)"/>
+    <param name="replay/auto_play"         value="$(arg auto_play)"/>
+    <param name="replay/show_cost_text"    value="$(arg show_cost_text)"/>
+    <param name="replay/max_text_labels"   value="500"/>
+    <param name="replay/show_tentative_path" value="true"/>
+    <param name="replay/show_neighbors"    value="true"/>
+
+    <!-- 起终点：-1 = 自动（左下角 -> 右上角）。也可以在 rviz 里点。 -->
+    <param name="planning/start_ix"        value="-1"/>
+    <param name="planning/start_iy"        value="-1"/>
+    <param name="planning/goal_ix"         value="-1"/>
+    <param name="planning/goal_iy"         value="-1"/>
+  </node>
+
+  <!-- rviz 的 Fixed Frame 是 map；TF 树里至少得有这个 frame，否则 rviz 会报
+       "Fixed Frame [map] does not exist"。发一个恒等变换把 frame 建起来。 -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="astar_map_tf"
+        args="0 0 0 0 0 0 map astar_base"/>
+
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="astar_rviz"
+        args="-d $(find astar_tutorial)/launch/astar_demo.rviz"/>
+
+  <!-- 键盘控制：另开一个终端手动跑（这才有独立 stdin）
+         cd docker && ./run.sh
+         rosrun astar_tutorial astar_keyboard
+       keyboard:=true 时会尝试用 xterm 弹窗（镜像里默认没装 xterm）。 -->
+  <node if="$(arg keyboard)" pkg="astar_tutorial" type="astar_keyboard" name="astar_keyboard"
+        output="screen" launch-prefix="xterm -geometry 92x26 -title 'A-star keyboard' -e"/>
+</launch>
