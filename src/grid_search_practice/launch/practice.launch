@@ -1,0 +1,40 @@
+<launch>
+  <!--
+    40x40 图搜索练习
+      终端1: roslaunch grid_search_practice practice.launch
+      终端2: rosrun grid_search_practice practice_keyboard
+      然后去 src/grid_search_practice/src/your_search.cpp 写四个算法
+  -->
+  <arg name="algorithm"            default="bfs"/>       <!-- bfs | dfs | dijkstra | astar -->
+  <arg name="use_8_connected"      default="false"/>
+  <arg name="allow_corner_cutting" default="false"/>
+  <arg name="auto_play"            default="false"/>
+  <arg name="map_width"            default="40"/>
+  <arg name="map_height"           default="40"/>
+  <arg name="map_resolution"       default="1.0"/>
+  <arg name="num_obstacles"        default="45"/>
+  <arg name="map_seed"             default="2026"/>
+  <arg name="rviz"                 default="true"/>
+
+  <node pkg="grid_search_practice" type="practice_rviz_node" name="practice_rviz_node" output="screen"
+        required="true">
+    <param name="frame_id" value="map"/>
+    <param name="map/width" value="$(arg map_width)"/>
+    <param name="map/height" value="$(arg map_height)"/>
+    <param name="map/resolution" value="$(arg map_resolution)"/>
+    <param name="map/num_obstacles" value="$(arg num_obstacles)"/>
+    <param name="map/seed" value="$(arg map_seed)"/>
+    <param name="planning/start_ix" value="0"/>
+    <param name="planning/start_iy" value="0"/>
+    <param name="planning/goal_ix" value="39"/>
+    <param name="planning/goal_iy" value="39"/>
+    <param name="search/algorithm" value="$(arg algorithm)"/>
+    <param name="search/use_8_connected" value="$(arg use_8_connected)"/>
+    <param name="search/allow_corner_cutting" value="$(arg allow_corner_cutting)"/>
+    <param name="replay/rate" value="20.0"/>
+    <param name="replay/auto_play" value="$(arg auto_play)"/>
+  </node>
+
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz"
+        args="-d $(find grid_search_practice)/launch/practice.rviz"/>
+</launch>

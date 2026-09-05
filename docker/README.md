@@ -69,7 +69,8 @@ rviz -d $(rospack find grid_path_searcher)/launch/rviz_config/demo.rviz
 ## 容器生命周期(常驻,exit 不会删)
 
 容器本体跑的是 `sleep infinity`,`./run.sh` 的每个 shell 都是 `docker exec` 进去的。
-所以 `exit` 只结束你这个 shell,容器和里面的 tmux / 后台节点继续在跑:
+所以 `exit` 只结束你这个 shell,容器和里面的 tmux / 后台节点继续在跑。
+tmux 按键、分屏、接回会话见 [tmux.md](tmux.md)。
 
 ```bash
 ./run.sh                 # 不存在就创建;已停止就 start;在跑就直接 exec 进去
