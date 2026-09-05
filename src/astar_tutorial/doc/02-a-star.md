@@ -74,17 +74,43 @@ A* 干的事就一句话：**把终点的位置提前用起来**。
 | `zero` | `0` | ✅ 可采纳（也最弱） | ✅ |
 | `manhattan` | `dx + dy` | ✅ **恰好等于 h\*** | ❌ **高估** |
 | `euclidean` | `√(dx²+dy²)` | ✅ 可采纳但偏弱 | ✅ 可采纳但偏弱 |
-| `diagonal` (octile) | `√2·min(dx,dy) + \|dx−dy\|` | ❌ 高估 | ✅ **恰好等于 h\*** |
+| `diagonal` (octile) | `√2·min(dx,dy) + \|dx−dy\|` | ✅ 可采纳但**很弱** | ✅ **恰好等于 h\*** |
 
-关键那一格：**8 邻域下曼哈顿距离高估**。斜走一步真实代价 `√2 ≈ 1.414`，
-曼哈顿把它算成 `2`。差了 41%，路径就不再保证最短。
+**整张表只有一个 ❌：8 邻域下的曼哈顿距离。** 斜走一步真实代价 `√2 ≈ 1.414`，
+曼哈顿把它算成 `2`。差了 41%，路径就不再保证最短 —— 反例在
+[03-compare.md](03-compare.md) §3.3。
 
 octile 那个式子的来历很直观：斜着走能同时消掉一格 `dx` 和一格 `dy`，
 所以尽量斜走 `min(dx,dy)` 步（每步 `√2`），剩下的 `|dx−dy|` 只能直走（每步 `1`）。
 空地上这就是精确答案。
 
-代码里 `isHeuristicAdmissible()` 按邻域把这张表编码进去了，
-`admissibilityWarning()` 负责在你选错时开口提醒。
+**octile 在 4 邻域下是可采纳的，但弱得几乎没用。** 记 `m = min(dx,dy)`、`M = max(dx,dy)`：
+
+```
+octile = √2·m + (M − m) = M + (√2−1)·m ≈ M + 0.414·m
+h*     = dx + dy        = M + m                        <- 4 邻域没有斜线
+=> octile ≤ h*，只在 m = 0 时相等
+```
+
+它以为可以斜着抄近路，而 4 邻域根本不许 —— 于是 `h` 只有真值的一半左右，
+A\* 退化得接近 Dijkstra。实测（41×25，起点左下→终点右上）：
+
+| 4 邻域 | `empty` expanded | `walls` (seed 7) expanded | 路径代价 |
+| --- | --- | --- | --- |
+| `zero`（= Dijkstra） | 1025 | 861 | 64 / 80 |
+| `diagonal` (octile) | **962** | 744 | 64 / 80 ← 对，但白扩展一堆 |
+| `manhattan` | **65** | 638 | 64 / 80 |
+
+```bash
+rosrun astar_tutorial astar_console_demo --h diagonal  --conn 4 --map empty --size 41 25 --quiet
+rosrun astar_tutorial astar_console_demo --h manhattan --conn 4 --map empty --size 41 25 --quiet
+```
+
+**962 vs 65。** 选错 `h` 不一定丢最优性，也可能只是白干活 —— 而后者没有任何报警。
+
+代码里 `isHeuristicAdmissible()` 只把那唯一的 ❌（8 邻域 + manhattan）和
+`weight × tie_breaker > 1` 两种情况判成不可采纳，`admissibilityWarning()` 负责开口提醒。
+**"可采纳"和"好用"是两件事，代码只能替你查前者。**
 
 ### 为什么"恰好等于 h*"是最好的选择
 
