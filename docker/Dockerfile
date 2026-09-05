@@ -1,10 +1,13 @@
-FROM osrf/ros:noetic-desktop-full
+# 可通过 --build-arg BASE_IMAGE=registry.example.com/osrf/ros:noetic-desktop-full
+# 切换到本地缓存或企业/地区镜像；默认仍使用官方镜像。
+ARG BASE_IMAGE=osrf/ros:noetic-desktop-full
+FROM ${BASE_IMAGE}
 
 # ---- 可选:国内 apt 镜像加速。构建时加 --build-arg USE_CN_MIRROR=1 启用 ----
 ARG USE_CN_MIRROR=0
 RUN if [ "$USE_CN_MIRROR" = "1" ]; then \
-      sed -i 's|http://archive.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g; \
-              s|http://security.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g' \
+      sed -i 's|http://archive.ubuntu.com|https://mirrors.aliyun.com|g; \
+              s|http://security.ubuntu.com|https://mirrors.aliyun.com|g' \
               /etc/apt/sources.list ; \
     fi
 

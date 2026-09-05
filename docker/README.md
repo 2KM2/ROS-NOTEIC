@@ -34,6 +34,9 @@ cd docker
 # 1) 构建镜像(基于 osrf/ros:noetic-desktop-full)
 ./build_image.sh
 #    国内网络加速 apt: USE_CN_MIRROR=1 ./build_image.sh
+#    基础镜像也可切换到可访问的镜像代理(示例):
+#    BASE_IMAGE=docker.m.daocloud.io/osrf/ros:noetic-desktop-full \
+#      USE_CN_MIRROR=1 ./build_image.sh
 
 # 2) 编译
 ./build_ws.sh            # 增量
