@@ -3,7 +3,7 @@
   <name>search_tutorial</name>
   <version>0.1.0</version>
   <description>
-    从零手写的 BFS / DFS / Dijkstra 栅格路径搜索，带 rviz 单步可视化。
+    从零手写的 BFS / DFS / Dijkstra / D* Lite / JPS 栅格路径搜索，带教学演示与自检。
     默认 4 邻域（只上下左右，不走对角线），所以每条边代价都是 1，
     「步数最少」和「代价最小」是同一个目标，BFS 和 Dijkstra 结果相同；
     打开 use_8_connected 就能看到两者分开。

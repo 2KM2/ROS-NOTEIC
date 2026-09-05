@@ -42,6 +42,7 @@ include_directories(
 # ---------------------------------------------------------------------------
 add_library(search_core
   src/graph_search.cpp
+  src/advanced_search.cpp
   src/trace_replayer.cpp
 )
 target_link_libraries(search_core ${catkin_LIBRARIES})
@@ -67,11 +68,18 @@ target_link_libraries(search_console_demo search_core ${catkin_LIBRARIES})
 add_executable(search_selfcheck src/search_selfcheck.cpp)
 target_link_libraries(search_selfcheck search_core ${catkin_LIBRARIES})
 
+add_executable(advanced_search_demo src/advanced_search_demo.cpp)
+target_link_libraries(advanced_search_demo search_core ${catkin_LIBRARIES})
+
+add_executable(advanced_search_selfcheck src/advanced_search_selfcheck.cpp)
+target_link_libraries(advanced_search_selfcheck search_core ${catkin_LIBRARIES})
+
 install(TARGETS search_core
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 install(TARGETS search_rviz_node search_keyboard search_console_demo search_selfcheck
+                advanced_search_demo advanced_search_selfcheck
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(DIRECTORY include/${PROJECT_NAME}/

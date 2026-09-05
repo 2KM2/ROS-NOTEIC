@@ -1,6 +1,18 @@
-# search_tutorial —— BFS / DFS / Dijkstra：三个算法，一个循环
+# search_tutorial —— 从图遍历到增量搜索与跳点剪枝
 
-这个包想说明的**唯一**一件事：
+在原有 BFS / DFS / Dijkstra 教程之外，本包还包含两个独立的进阶规划器：
+
+- **D* Lite**：地图变化或机器人移动后复用上一轮的 `g/rhs`，做增量重规划；
+- **JPS**：在经典 8 邻域均匀栅格模型中跳过对称中间节点，只扩展跳点。
+
+它们没有塞进下面的统一 `Frontier` 循环：D* Lite 的核心是局部一致性修复，JPS 的核心是改变邻居生成方式。实现见 `advanced_search.h/.cpp`，讲解见 [D* Lite](doc/05-dstar-lite.md) 和 [JPS](doc/06-jps.md)。
+
+```bash
+rosrun search_tutorial advanced_search_demo
+rosrun search_tutorial advanced_search_selfcheck 300
+```
+
+基础篇想说明的核心是：
 
 > **BFS、DFS、Dijkstra（以及隔壁包的 A\*）是同一段代码。
 > 区别只有一处 —— 每一轮从"待处理集合"里取哪一个出来。**
