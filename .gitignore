@@ -11,3 +11,8 @@ src/CMakeLists.txt
 *.so
 *.o
 *.a
+
+.codegraph/
+.cursor/
+.github/
+.vscode/
