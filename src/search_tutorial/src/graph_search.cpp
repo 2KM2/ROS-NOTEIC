@@ -150,28 +150,60 @@ SearchResult GraphSearch::search(int sx, int sy, int gx, int gy) {
   start_id_ = map_->toId(sx, sy);
   goal_id_ = map_->toId(gx, gy);
 
-  // 方向表：前 4 个是直走(右/左/上/下，代价 1)，后 4 个是斜走(代价 √2)。
-  // 默认 use_8_connected=false，只取前 4 个 —— **所以这个顺序不能改**，
-  // 一旦把某个斜方向挪到前 4 个里，4 邻域就悄悄变成了"允许对角线"。
+  // =====================================================================
+  // 练习 2：从这里往下把搜索主循环写回来。
+  // 对照文件末尾 #if 0 里的参考实现，以及 graph_search.h 顶部的 13 行伪代码。
   //
-  // 顺便说一句：这个方向表的**顺序**对 BFS 和 Dijkstra 的结果毫无影响（只影响出队顺序），
-  // 但对 DFS 影响巨大 —— DFS 走的是"最后压进去的那个方向"，
-  // 换一下 kDX/kDY 的顺序，DFS 的路径会完全变一个样。这本身就说明 DFS 有多不稳定。
+  // 方向表（顺序不要改，前 4 个是直角，后 4 个是斜向）：
+  //   static const int kDX[8] = {1, -1, 0, 0, 1, 1, -1, -1};
+  //   static const int kDY[8] = {0, 0, 1, -1, 1, -1, 1, -1};
+  //   const int num_dirs = cfg_.use_8_connected ? 8 : 4;
+  //
+  // 流程：
+  //   1. 起点入 frontier：g=0, depth=0, parent=-1, state=OPEN
+  //   2. while frontier 非空:
+  //      3. item = frontier.pop()                 ★ 练习 1 写的那个函数
+  //      4. 若 nodes_[item.id] 已 CLOSED → stale，continue
+  //      5. 用条目上的 g/depth/parent 落定节点，标 CLOSED
+  //      6. 若是终点 → 填 stats_，录 trace，return kSuccess
+  //      7. 遍历 num_dirs 个邻居:
+  //         8. 越界 / 障碍 / 斜穿墙角 → 记 skip，continue
+  //         9. 已 CLOSED → skip
+  //        10. g_new = cur.g + 边代价(直1斜√2)
+  //        11. 第一次发现 → 入 frontier，state=OPEN
+  //        12. 已在 frontier 里：
+  //              BFS      → 跳过
+  //              DFS      → 再压一次
+  //              Dijkstra → g 更小才松弛并重入
+  //   13. frontier 空了 → kFailedNoPath
+  //
+  // 边代价：对角线 (dx!=0 && dy!=0) 用 kSqrt2，否则 1.0。
+  // 斜穿墙角：两个直角邻格有一个是障碍就不让斜走（除非 allow_corner_cutting）。
+  // 每扩完一步把 SearchStep 推进 trace_（RViz 单步回放靠它）。
+  // =====================================================================
+
+  (void)t0;
+  stats_.result = SearchResult::kFailedNoPath;
+  stats_.time_ms = 0.0;
+  return stats_.result;
+}
+
+#if 0  // ===================== 参考实现（对着仿写，写完可删）=====================
   static const int kDX[8] = {1, -1, 0, 0, 1, 1, -1, -1};
   static const int kDY[8] = {0, 0, 1, -1, 1, -1, 1, -1};
   const int num_dirs = cfg_.use_8_connected ? 8 : 4;
 
   Frontier frontier;
   frontier.reset(cfg_.algorithm);
-  int open_count = 0;    // 状态为 OPEN 的**节点**数（不含容器里的重复条目）
+  int open_count = 0;
   int closed_count = 0;
 
   // ---------- 1. 起点入 frontier ----------                       [伪代码 1]
   {
     Node& s = nodes_[start_id_];
-    s.g = 0.0;      // 起点到自己，代价 0
-    s.depth = 0;    // 也是 0 步
-    s.parent = -1;  // 回溯的终止标志
+    s.g = 0.0;
+    s.depth = 0;
+    s.parent = -1;
     s.state = NodeState::kOpen;
     frontier.push({start_id_, -1, 0.0, 0});
     ++open_count;
@@ -409,6 +441,7 @@ SearchResult GraphSearch::search(int sx, int sy, int gx, int gy) {
   stats_.time_ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
   return stats_.result;
 }
+#endif  // 参考实现结束。对着上面仿写 search()。
 
 // ============================================================ 回溯路径
 std::vector<int> GraphSearch::pathIds() const {

@@ -178,22 +178,31 @@ class Frontier {
     }
   }
 
-  // ★★★ 整个包的核心就是这个函数 ★★★                              [伪代码 3]
-  // 三行代码，三个算法。别的地方一个字都不用改。
+  // ★★★ 练习 1：整个包的核心就是这个函数 ★★★                      [伪代码 3]
+  // 三行代码，三个算法。对着下面被注释掉的实现仿写回来。
+  //
+  //   Dijkstra : heap_.top() / pop()     —— g 最小
+  //   BFS      : deque_.front() / pop_front() —— 最早进来的（FIFO）
+  //   DFS      : deque_.back()  / pop_back()  —— 最晚进来的（LIFO）
   FrontierItem pop() {
+    // TODO: 按 algo_ 取出一个条目并返回。
+    return {};
+
+#if 0  // 参考实现，写完再看也行
     if (algo_ == Algorithm::kDijkstra) {
-      const FrontierItem it = heap_.top();  // g 最小的     -> Dijkstra
+      const FrontierItem it = heap_.top();
       heap_.pop();
       return it;
     }
     if (algo_ == Algorithm::kBfs) {
-      const FrontierItem it = deque_.front();  // 最早进来的 -> BFS（FIFO 队列）
+      const FrontierItem it = deque_.front();
       deque_.pop_front();
       return it;
     }
-    const FrontierItem it = deque_.back();  // 最晚进来的   -> DFS（LIFO 栈）
+    const FrontierItem it = deque_.back();
     deque_.pop_back();
     return it;
+#endif
   }
 
   bool empty() const {
