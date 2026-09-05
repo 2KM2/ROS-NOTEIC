@@ -1,0 +1,102 @@
+<launch>
+  <!-- ============ BFS / DFS / Dijkstra 教学 demo ============
+       roslaunch search_tutorial search_demo.launch
+
+       一步一步调试路径（推荐的第一次玩法）：
+         终端1: roslaunch search_tutorial search_demo.launch auto_play:=false \
+                        map_width:=20 map_height:=14 map_resolution:=1.0 show_cost_text:=true
+         终端2: rosrun search_tutorial search_keyboard
+                然后按 n 一步一步走，按 1/2/3 换算法，按 c 看对比表
+
+       常用变体：
+         roslaunch search_tutorial search_demo.launch algorithm:=bfs        # 一圈圈往外推(菱形)
+         roslaunch search_tutorial search_demo.launch algorithm:=dfs        # 一头扎到底
+         roslaunch search_tutorial search_demo.launch algorithm:=dijkstra   # 4邻域下和 BFS 同形
+         roslaunch search_tutorial search_demo.launch map_type:=empty       # 空地图最能看清扩展形状
+         roslaunch search_tutorial search_demo.launch use_8_connected:=true # 8邻域: BFS 开始次优
+         roslaunch search_tutorial search_demo.launch map_type:=maze algorithm:=dfs
+                                                                          # 迷宫里 DFS 反而不太吃亏
+  -->
+
+  <!-- 地图 -->
+  <arg name="map_type"       default="walls"/>   <!-- empty | random | walls | maze -->
+  <arg name="map_width"      default="40"/>
+  <arg name="map_height"     default="28"/>
+  <arg name="map_resolution" default="0.5"/>
+  <arg name="obstacle_ratio" default="0.18"/>
+  <arg name="map_seed"       default="2026"/>
+
+  <!-- 算法 -->
+  <arg name="algorithm"      default="dijkstra"/>  <!-- bfs | dfs | dijkstra -->
+  <!-- 默认 4 邻域：只上下左右，不走对角线。所有边代价都是 1，
+       所以 BFS 和 Dijkstra 求的是同一个最优值（cost 必然相同）。
+       改成 true 就是 8 邻域（斜边 √2），BFS 会开始给出比最短路更长的路径。 -->
+  <arg name="use_8_connected" default="false"/>
+  <!-- 只在 8 邻域下有意义；4 邻域没有斜线，这个开关不起作用 -->
+  <arg name="allow_corner_cutting" default="false"/>
+  <!-- 把"弹出重复条目"也算成一步录进 trace。DFS 下这种步很多，
+       正是它看懂"懒惰去重"的地方；想让回放更干净就设 false。 -->
+  <arg name="record_stale_pops" default="true"/>
+
+  <!-- 回放 -->
+  <arg name="replay_rate"    default="40.0"/>   <!-- 步/秒 -->
+  <arg name="auto_play"      default="true"/>
+  <arg name="show_cost_text" default="false"/>  <!-- 每格显示 g 和步数，地图小的时候再开 -->
+  <arg name="compare_on_replan" default="true"/> <!-- 每次重规划都打一遍三算法对比表 -->
+
+  <arg name="rviz"           default="true"/>
+  <!-- 键盘节点要独占一个终端的 stdin，没法跟 roslaunch 挤在一个终端里，
+       所以默认不启动。用法见下面的注释。 -->
+  <arg name="keyboard"       default="false"/>
+
+  <node pkg="search_tutorial" type="search_rviz_node" name="search_rviz_node" output="screen"
+        required="true">
+    <param name="frame_id"                 value="map"/>
+
+    <param name="map/type"                 value="$(arg map_type)"/>
+    <param name="map/width"                value="$(arg map_width)"/>
+    <param name="map/height"               value="$(arg map_height)"/>
+    <param name="map/resolution"           value="$(arg map_resolution)"/>
+    <param name="map/obstacle_ratio"       value="$(arg obstacle_ratio)"/>
+    <param name="map/num_walls"            value="4"/>
+    <param name="map/wall_gap"             value="2"/>
+    <param name="map/seed"                 value="$(arg map_seed)"/>
+    <param name="map/inflate_radius"       value="0"/>
+    <param name="map/border"               value="true"/>
+
+    <param name="search/algorithm"         value="$(arg algorithm)"/>
+    <param name="search/use_8_connected"   value="$(arg use_8_connected)"/>
+    <param name="search/allow_corner_cutting" value="$(arg allow_corner_cutting)"/>
+    <param name="search/max_iterations"    value="0"/>
+    <param name="search/record_stale_pops" value="$(arg record_stale_pops)"/>
+
+    <param name="replay/rate"              value="$(arg replay_rate)"/>
+    <param name="replay/auto_play"         value="$(arg auto_play)"/>
+    <param name="replay/show_cost_text"    value="$(arg show_cost_text)"/>
+    <param name="replay/max_text_labels"   value="500"/>
+    <param name="replay/show_tentative_path" value="true"/>
+    <param name="replay/show_neighbors"    value="true"/>
+    <param name="replay/compare_on_replan" value="$(arg compare_on_replan)"/>
+
+    <!-- 起终点：-1 = 自动（左下角 -> 右上角）。也可以在 rviz 里点。 -->
+    <param name="planning/start_ix"        value="-1"/>
+    <param name="planning/start_iy"        value="-1"/>
+    <param name="planning/goal_ix"         value="-1"/>
+    <param name="planning/goal_iy"         value="-1"/>
+  </node>
+
+  <!-- rviz 的 Fixed Frame 是 map；TF 树里至少得有这个 frame，否则 rviz 会报
+       "Fixed Frame [map] does not exist"。发一个恒等变换把 frame 建起来。 -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="search_map_tf"
+        args="0 0 0 0 0 0 map search_base"/>
+
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="search_rviz"
+        args="-d $(find search_tutorial)/launch/search_demo.rviz"/>
+
+  <!-- 键盘控制：另开一个终端手动跑（这才有独立 stdin）
+         cd docker && ./run.sh
+         rosrun search_tutorial search_keyboard
+       keyboard:=true 时会尝试用 xterm 弹窗（镜像里默认没装 xterm）。 -->
+  <node if="$(arg keyboard)" pkg="search_tutorial" type="search_keyboard" name="search_keyboard"
+        output="screen" launch-prefix="xterm -geometry 92x30 -title 'search keyboard' -e"/>
+</launch>

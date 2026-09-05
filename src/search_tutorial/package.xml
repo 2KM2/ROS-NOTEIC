@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>search_tutorial</name>
+  <version>0.1.0</version>
+  <description>
+    从零手写的 BFS / DFS / Dijkstra 栅格路径搜索，带 rviz 单步可视化。
+    默认 4 邻域（只上下左右，不走对角线），所以每条边代价都是 1，
+    「步数最少」和「代价最小」是同一个目标，BFS 和 Dijkstra 结果相同；
+    打开 use_8_connected 就能看到两者分开。
+    三个算法共用同一段主循环，唯一的区别是每轮从 frontier 里取哪个条目
+    （FIFO / LIFO / g 最小），见 include/search_tutorial/graph_search.h 顶部的统一伪代码。
+    算法核心只依赖 STL，可脱离 ROS 单独编译；是 astar_tutorial 的前置篇
+    （A* = Dijkstra + 启发函数 h）。
+  </description>
+  <maintainer email="kaiming.zhang@example.com">kaiming.zhang</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <!-- 复用它的 GridMap2D，并拿它的 A* 给本包的 Dijkstra 做交叉验证 -->
+  <depend>astar_tutorial</depend>
+
+  <exec_depend>rviz</exec_depend>
+
+  <export>
+  </export>
+</package>
