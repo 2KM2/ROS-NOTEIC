@@ -38,16 +38,20 @@ if [ -t 0 ] && [ -t 1 ]; then
   TTY_ARGS=(-it)
 fi
 
-exists()  { [ -n "$(docker ps -aq -f name="^${CONTAINER}$")" ]; }
-running() { [ -n "$(docker ps  -q -f name="^${CONTAINER}$")" ]; }
+container_state() {
+  docker inspect -f '{{.State.Status}}' "$CONTAINER" 2>/dev/null || true
+}
 
-if [ "$RECREATE" -eq 1 ] && exists; then
+CONTAINER_STATE=$(container_state)
+
+if [ "$RECREATE" -eq 1 ] && [ -n "$CONTAINER_STATE" ]; then
   echo "[run] 销毁旧容器 $CONTAINER"
   docker rm -f "$CONTAINER" >/dev/null
+  CONTAINER_STATE=""
 fi
 
 # --- 容器不存在 -> 创建一个常驻容器 ---
-if ! exists; then
+if [ -z "$CONTAINER_STATE" ]; then
   GPU_ARGS=()
   if [ -d /dev/dri ]; then
     GPU_ARGS+=(--device /dev/dri)
@@ -76,7 +80,7 @@ if ! exists; then
     "$IMAGE" \
     sleep infinity >/dev/null
 
-elif ! running; then
+elif [ "$CONTAINER_STATE" != "running" ]; then
   echo "[run] 启动已存在的容器 $CONTAINER"
   docker start "$CONTAINER" >/dev/null
 fi
