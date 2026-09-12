@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/rviz_plugins/CMakeLists.txt",
+      "type": "document",
+      "name": "CMakeLists.txt",
+      "filePath": "src/rviz_plugins/CMakeLists.txt",
+      "summary": "rviz_plugins 的 catkin/CMake 构建脚本：按 rviz_QT_VERSION 选择 Qt4 或 Qt5，对 goal_tool.h 运行 moc，并将 pose_tool 与 goal_tool 编译为 librviz_plugins 共享库；概率地图等 Display 源文件已注释，未编入当前目标。",
+      "tags": ["构建系统", "cmake", "catkin", "qt", "配置"],
+      "complexity": "moderate",
+      "languageNotes": "定义 QT_NO_KEYWORDS 以避免 Qt signals/slots 与 Boost 宏冲突；qt5_wrap_cpp 目前仅处理 src/goal_tool.h。"
+    },
+    {
+      "id": "pipeline:src/rviz_plugins/Makefile",
+      "type": "pipeline",
+      "name": "Makefile",
+      "filePath": "src/rviz_plugins/Makefile",
+      "summary": "ROS rosbuild 兼容层 Makefile，仅 include mk/cmake.mk，将实际构建转交给 catkin/CMake。",
+      "tags": ["构建系统", "makefile", "catkin", "基础设施"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/rviz_plugins/package.xml",
+      "type": "config",
+      "name": "package.xml",
+      "filePath": "src/rviz_plugins/package.xml",
+      "summary": "rviz_plugins 的 catkin 包清单，声明对 rviz、roscpp 与 Qt5 的构建/运行依赖，并通过 export 向 RViz 注册 plugin_description.xml。",
+      "tags": ["配置", "catkin", "ros-package", "rviz", "qt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/rviz_plugins/plugin_description.xml",
+      "type": "config",
+      "name": "plugin_description.xml",
+      "filePath": "src/rviz_plugins/plugin_description.xml",
+      "summary": "RViz pluginlib 描述文件，导出 Goal3DTool（三维目标点点击工具）以及 ProbMapDisplay、AerialMapDisplay、MultiProbMapDisplay 三类地图 Display。",
+      "tags": ["配置", "rviz", "插件", "pluginlib", "goal-tool"],
+      "complexity": "simple",
+      "languageNotes": "class 的 type 为 rviz::Goal3DTool 等，需与源码插件类名及 PLUGINLIB_EXPORT_CLASS 宏保持一致。"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:src/rviz_plugins/CMakeLists.txt",
+      "target": "file:src/rviz_plugins/src/goal_tool.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src/rviz_plugins/CMakeLists.txt",
+      "target": "file:src/rviz_plugins/src/goal_tool.h",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src/rviz_plugins/CMakeLists.txt",
+      "target": "file:src/rviz_plugins/src/pose_tool.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src/rviz_plugins/CMakeLists.txt",
+      "target": "config:src/rviz_plugins/plugin_description.xml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "pipeline:src/rviz_plugins/Makefile",
+      "target": "document:src/rviz_plugins/CMakeLists.txt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src/rviz_plugins/package.xml",
+      "target": "config:src/rviz_plugins/plugin_description.xml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src/rviz_plugins/package.xml",
+      "target": "document:src/rviz_plugins/CMakeLists.txt",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src/rviz_plugins/plugin_description.xml",
+      "target": "file:src/rviz_plugins/src/goal_tool.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src/rviz_plugins/plugin_description.xml",
+      "target": "file:src/rviz_plugins/src/probmap_display.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src/rviz_plugins/plugin_description.xml",
+      "target": "file:src/rviz_plugins/src/aerialmap_display.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src/rviz_plugins/plugin_description.xml",
+      "target": "file:src/rviz_plugins/src/multi_probmap_display.cpp",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

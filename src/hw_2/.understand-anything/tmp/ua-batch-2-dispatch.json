@@ -1,0 +1,37 @@
+{
+  "batchIndex": 2,
+  "totalBatches": 4,
+  "files": [
+    {
+      "path": "src/rviz_plugins/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 102,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/rviz_plugins/Makefile",
+      "language": "makefile",
+      "sizeLines": 0,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "src/rviz_plugins/package.xml",
+      "language": "xml",
+      "sizeLines": 30,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/rviz_plugins/plugin_description.xml",
+      "language": "xml",
+      "sizeLines": 30,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "src/rviz_plugins/CMakeLists.txt": [],
+    "src/rviz_plugins/Makefile": [],
+    "src/rviz_plugins/package.xml": [],
+    "src/rviz_plugins/plugin_description.xml": []
+  },
+  "neighborMap": {}
+}

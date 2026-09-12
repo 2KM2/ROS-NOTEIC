@@ -1,0 +1,309 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/grid_path_searcher/include/Astar_searcher.h",
+      "type": "file",
+      "name": "Astar_searcher.h",
+      "filePath": "src/grid_path_searcher/include/Astar_searcher.h",
+      "summary": "A* 路径搜索器头文件，定义 AstarPathFinder 类，用于栅格地图上的 A* 搜索，包括启发式函数 getHeu、后继节点获取 AstarGetSucc、图搜索 AstarGraphSearch 和路径回溯 getPath。",
+      "tags": ["path-searcher", "astar", "grid-map", "header"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/grid_path_searcher/include/JPS_searcher.h",
+      "type": "file",
+      "name": "JPS_searcher.h",
+      "filePath": "src/grid_path_searcher/include/JPS_searcher.h",
+      "summary": "JPS 路径搜索器头文件，定义 JPSPathFinder 类，继承 AstarPathFinder，实现 JPS* 算法的后继节点获取 JPSGetSucc 和图搜索 JPSGraphSearch。",
+      "tags": ["path-searcher", "jps", "grid-map", "header"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/grid_path_searcher/include/JPS_utils.h",
+      "type": "file",
+      "name": "JPS_utils.h",
+      "filePath": "src/grid_path_searcher/include/JPS_utils.h",
+      "summary": "JPS 工具头文件，定义 JPS3DNeib 结构体，包含 3D 邻居搜索的预计算表 ns、f1、f2，用于 JPS 算法的邻居扩展。",
+      "tags": ["jps", "utility", "header"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/grid_path_searcher/include/node.h",
+      "type": "file",
+      "name": "node.h",
+      "filePath": "src/grid_path_searcher/include/node.h",
+      "summary": "栅格节点头文件，定义 GridNode 结构体，包含坐标、方向、gScore、fScore、cameFrom 等搜索节点信息。",
+      "tags": ["grid-node", "astar", "jps"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/grid_path_searcher/src/Astar_searcher.cpp",
+      "type": "file",
+      "name": "Astar_searcher.cpp",
+      "filePath": "src/grid_path_searcher/src/Astar_searcher.cpp",
+      "summary": "A* 路径搜索器实现文件，包含 AstarPathFinder 类的完整实现，包括启发式函数 getHeu（学生需实现）、后继节点获取 AstarGetSucc（学生需实现）、图搜索 AstarGraphSearch 和路径回溯 getPath。",
+      "tags": ["path-searcher", "astar", "grid-map", "implementation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/grid_path_searcher/src/demo_node.cpp",
+      "type": "file",
+      "name": "demo_node.cpp",
+      "filePath": "src/grid_path_searcher/src/demo_node.cpp",
+      "summary": "ROS 演示节点实现文件，订阅地图和路点，调用 AstarGraphSearch 或 JPSGraphSearch 进行路径搜索，并发布可视化标记。",
+      "tags": ["ros-node", "demo", "astar", "jps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/grid_path_searcher/src/random_complex_generator.cpp",
+      "type": "file",
+      "name": "random_complex_generator.cpp",
+      "filePath": "src/grid_path_searcher/src/random_complex_generator.cpp",
+      "summary": "随机复杂地图生成器实现文件，生成包含圆形和椭圆形障碍物的复杂栅格地图，并发布点云。",
+      "tags": ["map-generator", "pcl", "random-map"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/grid_path_searcher/src/read_only/JPS_searcher.cpp",
+      "type": "file",
+      "name": "JPS_searcher.cpp",
+      "filePath": "src/grid_path_searcher/src/read_only/JPS_searcher.cpp",
+      "summary": "JPS 路径搜索器实现文件（只读），包含 JPSPathFinder 类的完整实现，包括 JPSGetSucc、jump、hasForced 等函数。",
+      "tags": ["path-searcher", "jps", "grid-map", "implementation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/grid_path_searcher/src/read_only/JPS_utils.cpp",
+      "type": "file",
+      "name": "JPS_utils.cpp",
+      "filePath": "src/grid_path_searcher/src/read_only/JPS_utils.cpp",
+      "summary": "JPS 工具实现文件（只读），包含 JPS3DNeib 结构的初始化和邻居计算函数。",
+      "tags": ["jps", "utility", "implementation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/rviz_plugins/src/aerialmap_display.cpp",
+      "type": "file",
+      "name": "aerialmap_display.cpp",
+      "filePath": "src/rviz_plugins/src/aerialmap_display.cpp",
+      "summary": "AerialMapDisplay 实现文件，RViz 插件，用于显示占用栅格地图，包含更新、变换和清空等功能。",
+      "tags": ["rviz-plugin", "display", "aerialmap", "ogre"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/rviz_plugins/src/goal_tool.cpp",
+      "type": "file",
+      "name": "goal_tool.cpp",
+      "filePath": "src/rviz_plugins/src/goal_tool.cpp",
+      "summary": "Goal3DTool 实现文件，RViz 插件，用于设置 3D 目标点，继承 Pose3DTool。",
+      "tags": ["rviz-plugin", "tool", "goal", "pose"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/rviz_plugins/src/multi_probmap_display.cpp",
+      "type": "file",
+      "name": "multi_probmap_display.cpp",
+      "filePath": "src/rviz_plugins/src/multi_probmap_display.cpp",
+      "summary": "MultiProbMapDisplay 实现文件，RViz 插件，用于显示多概率栅格地图，继承 Display。",
+      "tags": ["rviz-plugin", "display", "multimap", "probmap"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/rviz_plugins/src/pose_tool.cpp",
+      "type": "file",
+      "name": "pose_tool.cpp",
+      "filePath": "src/rviz_plugins/src/pose_tool.cpp",
+      "summary": "Pose3DTool 实现文件，RViz 插件的基础工具类，用于处理 3D 姿态设置，继承 Tool。",
+      "tags": ["rviz-plugin", "tool", "pose", "base"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/rviz_plugins/src/probmap_display.cpp",
+      "type": "file",
+      "name": "probmap_display.cpp",
+      "filePath": "src/rviz_plugins/src/probmap_display.cpp",
+      "summary": "ProbMapDisplay 实现文件，RViz 插件，用于显示概率栅格地图，继承 Display。",
+      "tags": ["rviz-plugin", "display", "probmap", "ogre"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/waypoint_generator/CMakeLists.txt",
+      "type": "config",
+      "name": "CMakeLists.txt",
+      "filePath": "src/waypoint_generator/CMakeLists.txt",
+      "summary": "waypoint_generator 包的 CMake 配置文件，定义编译选项、查找包和添加可执行文件。",
+      "tags": ["cmake", "waypoint-generator", "build"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/grid_path_searcher/include/Astar_searcher.h",
+      "target": "file:src/grid_path_searcher/include/node.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/grid_path_searcher/include/JPS_searcher.h",
+      "target": "file:src/grid_path_searcher/include/Astar_searcher.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/grid_path_searcher/include/JPS_searcher.h",
+      "target": "file:src/grid_path_searcher/include/JPS_utils.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/Astar_searcher.cpp",
+      "target": "function:src/grid_path_searcher/src/Astar_searcher.cpp:AstarGraphSearch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/Astar_searcher.cpp",
+      "target": "function:src/grid_path_searcher/src/Astar_searcher.cpp:getHeu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/Astar_searcher.cpp",
+      "target": "function:src/grid_path_searcher/src/Astar_searcher.cpp:AstarGetSucc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/Astar_searcher.cpp",
+      "target": "function:src/grid_path_searcher/src/Astar_searcher.cpp:getPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/demo_node.cpp",
+      "target": "file:src/grid_path_searcher/include/Astar_searcher.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/demo_node.cpp",
+      "target": "file:src/grid_path_searcher/include/JPS_searcher.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/demo_node.cpp",
+      "target": "function:src/grid_path_searcher/src/demo_node.cpp:pathFinding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/demo_node.cpp",
+      "target": "function:src/grid_path_searcher/src/demo_node.cpp:visGridPath",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/random_complex_generator.cpp",
+      "target": "function:src/grid_path_searcher/src/random_complex_generator.cpp:RandomMapGenerate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/grid_path_searcher/src/read_only/JPS_searcher.cpp",
+      "target": "file:src/grid_path_searcher/include/JPS_utils.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/aerialmap_display.cpp",
+      "target": "file:src/rviz_plugins/src/aerialmap_display.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/goal_tool.cpp",
+      "target": "file:src/rviz_plugins/src/goal_tool.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/multi_probmap_display.cpp",
+      "target": "file:src/rviz_plugins/src/multi_probmap_display.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/pose_tool.cpp",
+      "target": "file:src/rviz_plugins/src/pose_tool.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/probmap_display.cpp",
+      "target": "file:src/rviz_plugins/src/probmap_display.h",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/rviz_plugins/src/aerialmap_display.cpp",
+      "target": "function:src/rviz_plugins/src/aerialmap_display.cpp:AerialMapDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/rviz_plugins/src/goal_tool.cpp",
+      "target": "function:src/rviz_plugins/src/goal_tool.cpp:Goal3DTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/rviz_plugins/src/multi_probmap_display.cpp",
+      "target": "function:src/rviz_plugins/src/multi_probmap_display.cpp:MultiProbMapDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/rviz_plugins/src/pose_tool.cpp",
+      "target": "function:src/rviz_plugins/src/pose_tool.cpp:Pose3DTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/rviz_plugins/src/probmap_display.cpp",
+      "target": "function:src/rviz_plugins/src/probmap_display.cpp:ProbMapDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/waypoint_generator/CMakeLists.txt",
+      "target": "file:src/waypoint_generator/CMakeLists.txt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

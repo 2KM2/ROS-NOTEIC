@@ -1,0 +1,10 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 0,
+  "filesSkipped": [
+    "src/grid_path_searcher/CMakeLists.txt",
+    "src/grid_path_searcher/README.md",
+    "src/grid_path_searcher/package.xml"
+  ],
+  "results": []
+}

@@ -1,0 +1,45 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/rviz_plugins/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 102,
+      "nonEmptyLines": 85,
+      "metrics": {}
+    },
+    {
+      "path": "src/rviz_plugins/Makefile",
+      "language": "makefile",
+      "fileCategory": "infra",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "stepCount": 0
+      }
+    },
+    {
+      "path": "src/rviz_plugins/package.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 30,
+      "nonEmptyLines": 24,
+      "metrics": {}
+    },
+    {
+      "path": "src/rviz_plugins/plugin_description.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 30,
+      "nonEmptyLines": 30,
+      "metrics": {}
+    }
+  ]
+}
