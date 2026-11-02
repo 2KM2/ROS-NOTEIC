@@ -16,3 +16,4 @@ src/CMakeLists.txt
 .cursor/
 .github/
 .vscode/
+log
