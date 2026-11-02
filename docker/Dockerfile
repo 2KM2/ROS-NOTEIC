@@ -39,6 +39,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         qtbase5-dev \
         qt5-default \
         ros-noetic-rviz \
+        ros-noetic-csm \
+        ros-noetic-geometry-msgs \
+        ros-noetic-message-filters \
+        ros-noetic-nav-core \
         ros-noetic-pcl-ros \
         ros-noetic-pcl-conversions \
         ros-noetic-tf \
