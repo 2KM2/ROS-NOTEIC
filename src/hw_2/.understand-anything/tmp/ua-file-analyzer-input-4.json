@@ -1,0 +1,15 @@
+{
+  "projectRoot": "/home/zkm/workspace/ROS-NOTEIC/src/hw_2",
+  "batchFiles": [
+    {"path": "src/waypoint_generator/package.xml", "language": "xml", "sizeLines": 25, "fileCategory": "config"},
+    {"path": "src/waypoint_generator/src/sample_waypoints.h", "language": "c", "sizeLines": 212, "fileCategory": "code"},
+    {"path": "src/waypoint_generator/src/waypoint_generator.cpp", "language": "cpp", "sizeLines": 258, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "src/waypoint_generator/package.xml": [],
+    "src/waypoint_generator/src/sample_waypoints.h": [],
+    "src/waypoint_generator/src/waypoint_generator.cpp": [
+      "src/waypoint_generator/src/sample_waypoints.h"
+    ]
+  }
+}

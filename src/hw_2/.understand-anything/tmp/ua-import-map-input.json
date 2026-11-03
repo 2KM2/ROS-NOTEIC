@@ -1,0 +1,180 @@
+{
+  "projectRoot": "/home/zkm/workspace/ROS-NOTEIC/src/hw_2",
+  "files": [
+    {
+      "path": "src/grid_path_searcher/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/grid_path_searcher/include/Astar_searcher.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/backward.hpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/JPS_searcher.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/JPS_utils.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/node.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/demo.launch",
+      "language": "launch",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/rviz_config/demo.rviz",
+      "language": "rviz",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/rviz_config/jps_demo.rviz",
+      "language": "rviz",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/package.xml",
+      "language": "xml",
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/grid_path_searcher/README.md",
+      "language": "markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/grid_path_searcher/src/Astar_searcher.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/demo_node.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/random_complex_generator.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/read_only/JPS_searcher.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/read_only/JPS_utils.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/rviz_plugins/config/rviz_config.rviz",
+      "language": "rviz",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/Makefile",
+      "language": "makefile",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "src/rviz_plugins/package.xml",
+      "language": "xml",
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/rviz_plugins/plugin_description.xml",
+      "language": "xml",
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/rviz_plugins/src/aerialmap_display.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/aerialmap_display.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/goal_tool.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/goal_tool.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/multi_probmap_display.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/multi_probmap_display.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/pose_tool.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/pose_tool.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/probmap_display.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/probmap_display.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/waypoint_generator/CMakeLists.txt",
+      "language": "txt",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/waypoint_generator/package.xml",
+      "language": "xml",
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/waypoint_generator/src/sample_waypoints.h",
+      "language": "c",
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/waypoint_generator/src/waypoint_generator.cpp",
+      "language": "cpp",
+      "fileCategory": "code"
+    }
+  ]
+}

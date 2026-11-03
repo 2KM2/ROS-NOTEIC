@@ -1,0 +1,56 @@
+{
+  "nodes": [
+    {
+      "id": "config:src/grid_path_searcher/CMakeLists.txt",
+      "type": "config",
+      "name": "CMakeLists.txt",
+      "filePath": "src/grid_path_searcher/CMakeLists.txt",
+      "summary": "grid_path_searcher 的 catkin/CMake 构建配置：编译 demo_node（Astar_searcher.cpp 与只读 JPS 源码）和 random_complex 两个节点，并链接 roscpp、PCL 与 Eigen3。",
+      "tags": ["构建系统", "cmake", "catkin", "configuration"],
+      "complexity": "simple",
+      "languageNotes": "使用 ROS1 catkin 的 add_executable，将学生实现的 A* 与只读 JPS 编入同一 demo_node；开启 C++11 与 -O3。"
+    },
+    {
+      "id": "document:src/grid_path_searcher/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/grid_path_searcher/README.md",
+      "summary": "仅含一级标题 grid_path_searcher 的占位 README，未提供安装、运行或作业说明。",
+      "tags": ["documentation", "占位文档", "ros-package"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/grid_path_searcher/package.xml",
+      "type": "config",
+      "name": "package.xml",
+      "filePath": "src/grid_path_searcher/package.xml",
+      "summary": "ROS1 catkin 包清单，将本包描述为三维栅格地图上的路径搜索方法，并声明 roscpp、rospy、sensor_msgs、std_msgs、visualization_msgs 的编译与运行依赖。",
+      "tags": ["configuration", "catkin", "ros-package", "依赖声明"],
+      "complexity": "simple",
+      "languageNotes": "采用 ROS1 package.xml format 1（无 format 属性），build_depend 与 run_depend 成对列出。"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:src/grid_path_searcher/CMakeLists.txt",
+      "target": "config:src/grid_path_searcher/package.xml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src/grid_path_searcher/README.md",
+      "target": "config:src/grid_path_searcher/package.xml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/grid_path_searcher/README.md",
+      "target": "config:src/grid_path_searcher/CMakeLists.txt",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

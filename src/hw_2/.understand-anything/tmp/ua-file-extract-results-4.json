@@ -1,0 +1,1073 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/waypoint_generator/package.xml",
+      "language": "xml",
+      "fileCategory": "config",
+      "totalLines": 25,
+      "nonEmptyLines": 17,
+      "metrics": {}
+    },
+    {
+      "path": "src/waypoint_generator/src/sample_waypoints.h",
+      "language": "c",
+      "fileCategory": "code",
+      "totalLines": 213,
+      "nonEmptyLines": 190,
+      "callGraph": [
+        {
+          "caller": "point",
+          "callee": "tf::createQuaternionMsgFromYaw",
+          "lineNumber": 13
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 21
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 26
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 31
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 36
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 41
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 46
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 51
+        },
+        {
+          "caller": "point",
+          "callee": "push_back",
+          "lineNumber": 56
+        },
+        {
+          "caller": "circle",
+          "callee": "tf::createQuaternionMsgFromYaw",
+          "lineNumber": 68
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 73
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 78
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 82
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 87
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 92
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 96
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 101
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 106
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 110
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 115
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 120
+        },
+        {
+          "caller": "circle",
+          "callee": "push_back",
+          "lineNumber": 124
+        },
+        {
+          "caller": "eight",
+          "callee": "tf::createQuaternionMsgFromYaw",
+          "lineNumber": 140
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 148
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 152
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 156
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 160
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 164
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 168
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 172
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 176
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 181
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 185
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 189
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 193
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 197
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 201
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 205
+        },
+        {
+          "caller": "eight",
+          "callee": "push_back",
+          "lineNumber": 209
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/waypoint_generator/src/waypoint_generator.cpp",
+      "language": "cpp",
+      "fileCategory": "code",
+      "totalLines": 258,
+      "nonEmptyLines": 225,
+      "functions": [
+        {
+          "name": "load_seg",
+          "startLine": 30,
+          "endLine": 71,
+          "params": [
+            "nh",
+            "segid",
+            "time_base"
+          ]
+        },
+        {
+          "name": "load_waypoints",
+          "startLine": 73,
+          "endLine": 84,
+          "params": [
+            "nh",
+            "time_base"
+          ]
+        },
+        {
+          "name": "publish_waypoints",
+          "startLine": 86,
+          "endLine": 96,
+          "params": []
+        },
+        {
+          "name": "publish_waypoints_vis",
+          "startLine": 98,
+          "endLine": 116,
+          "params": []
+        },
+        {
+          "name": "odom_callback",
+          "startLine": 118,
+          "endLine": 144,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "goal_callback",
+          "startLine": 146,
+          "endLine": 207,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "traj_start_trigger_callback",
+          "startLine": 209,
+          "endLine": 242,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 244,
+          "endLine": 258,
+          "params": [
+            "argc",
+            "argv"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "load_seg",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "load_waypoints",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "publish_waypoints",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "publish_waypoints_vis",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "odom_callback",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "goal_callback",
+          "line": 146,
+          "isDefault": false
+        },
+        {
+          "name": "traj_start_trigger_callback",
+          "line": 209,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 244,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "load_seg",
+          "callee": "boost::str",
+          "lineNumber": 31
+        },
+        {
+          "caller": "load_seg",
+          "callee": "bfmt",
+          "lineNumber": 31
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_INFO",
+          "lineNumber": 34
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 35
+        },
+        {
+          "caller": "load_seg",
+          "callee": "getParam",
+          "lineNumber": 35
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT_MSG",
+          "lineNumber": 36
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 37
+        },
+        {
+          "caller": "load_seg",
+          "callee": "getParam",
+          "lineNumber": 37
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 38
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 44
+        },
+        {
+          "caller": "load_seg",
+          "callee": "getParam",
+          "lineNumber": 44
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 45
+        },
+        {
+          "caller": "load_seg",
+          "callee": "getParam",
+          "lineNumber": 45
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 46
+        },
+        {
+          "caller": "load_seg",
+          "callee": "getParam",
+          "lineNumber": 46
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 48
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 48
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 49
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 49
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 49
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 49
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 49
+        },
+        {
+          "caller": "load_seg",
+          "callee": "ros::Duration",
+          "lineNumber": 53
+        },
+        {
+          "caller": "load_seg",
+          "callee": "tf::getYaw",
+          "lineNumber": 55
+        },
+        {
+          "caller": "load_seg",
+          "callee": "size",
+          "lineNumber": 57
+        },
+        {
+          "caller": "load_seg",
+          "callee": "tf::createQuaternionMsgFromYaw",
+          "lineNumber": 59
+        },
+        {
+          "caller": "load_seg",
+          "callee": "at",
+          "lineNumber": 60
+        },
+        {
+          "caller": "load_seg",
+          "callee": "at",
+          "lineNumber": 60
+        },
+        {
+          "caller": "load_seg",
+          "callee": "x",
+          "lineNumber": 62
+        },
+        {
+          "caller": "load_seg",
+          "callee": "std::cos",
+          "lineNumber": 62
+        },
+        {
+          "caller": "load_seg",
+          "callee": "x",
+          "lineNumber": 62
+        },
+        {
+          "caller": "load_seg",
+          "callee": "std::sin",
+          "lineNumber": 62
+        },
+        {
+          "caller": "load_seg",
+          "callee": "y",
+          "lineNumber": 62
+        },
+        {
+          "caller": "load_seg",
+          "callee": "y",
+          "lineNumber": 63
+        },
+        {
+          "caller": "load_seg",
+          "callee": "std::sin",
+          "lineNumber": 63
+        },
+        {
+          "caller": "load_seg",
+          "callee": "x",
+          "lineNumber": 63
+        },
+        {
+          "caller": "load_seg",
+          "callee": "std::cos",
+          "lineNumber": 63
+        },
+        {
+          "caller": "load_seg",
+          "callee": "y",
+          "lineNumber": 63
+        },
+        {
+          "caller": "load_seg",
+          "callee": "x",
+          "lineNumber": 64
+        },
+        {
+          "caller": "load_seg",
+          "callee": "y",
+          "lineNumber": 65
+        },
+        {
+          "caller": "load_seg",
+          "callee": "at",
+          "lineNumber": 66
+        },
+        {
+          "caller": "load_seg",
+          "callee": "push_back",
+          "lineNumber": 67
+        },
+        {
+          "caller": "load_seg",
+          "callee": "push_back",
+          "lineNumber": 70
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "clear",
+          "lineNumber": 75
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 76
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "getParam",
+          "lineNumber": 76
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "load_seg",
+          "lineNumber": 78
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 80
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "ROS_INFO",
+          "lineNumber": 83
+        },
+        {
+          "caller": "load_waypoints",
+          "callee": "size",
+          "lineNumber": 83
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "std::string",
+          "lineNumber": 87
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "ros::Time::now",
+          "lineNumber": 88
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "publish",
+          "lineNumber": 89
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "insert",
+          "lineNumber": 93
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "begin",
+          "lineNumber": 93
+        },
+        {
+          "caller": "publish_waypoints",
+          "callee": "clear",
+          "lineNumber": 95
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "std::string",
+          "lineNumber": 101
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "ros::Time::now",
+          "lineNumber": 102
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "push_back",
+          "lineNumber": 107
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "begin",
+          "lineNumber": 110
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "end",
+          "lineNumber": 110
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "push_back",
+          "lineNumber": 113
+        },
+        {
+          "caller": "publish_waypoints_vis",
+          "callee": "publish",
+          "lineNumber": 115
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "size",
+          "lineNumber": 122
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "front",
+          "lineNumber": 123
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "front",
+          "lineNumber": 125
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "bfmt",
+          "lineNumber": 128
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "toSec",
+          "lineNumber": 128
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "bfmt",
+          "lineNumber": 130
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "ROS_INFO_STREAM",
+          "lineNumber": 136
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "str",
+          "lineNumber": 136
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 138
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 139
+        },
+        {
+          "caller": "odom_callback",
+          "callee": "pop_front",
+          "lineNumber": 141
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "ros::Time::now",
+          "lineNumber": 152
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "param",
+          "lineNumber": 156
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 156
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 158
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "circle",
+          "lineNumber": 159
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 160
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 161
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 162
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "eight",
+          "lineNumber": 163
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 164
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 165
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 166
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "point",
+          "lineNumber": 167
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 168
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 169
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 170
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "load_waypoints",
+          "lineNumber": 171
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 172
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "clear",
+          "lineNumber": 176
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "push_back",
+          "lineNumber": 177
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 178
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 179
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "ROS_WARN",
+          "lineNumber": 181
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "string",
+          "lineNumber": 187
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "tf::getYaw",
+          "lineNumber": 188
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "tf::createQuaternionMsgFromYaw",
+          "lineNumber": 189
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "push_back",
+          "lineNumber": 191
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 192
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "size",
+          "lineNumber": 195
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "erase",
+          "lineNumber": 196
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "std::prev",
+          "lineNumber": 196
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "end",
+          "lineNumber": 196
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 198
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "size",
+          "lineNumber": 201
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 202
+        },
+        {
+          "caller": "goal_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 203
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "ROS_ERROR",
+          "lineNumber": 211
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "ROS_WARN",
+          "lineNumber": 215
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "ROS_ASSERT",
+          "lineNumber": 217
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "ros::Time",
+          "lineNumber": 217
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "param",
+          "lineNumber": 220
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 220
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "ROS_ERROR_STREAM",
+          "lineNumber": 222
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 223
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "point",
+          "lineNumber": 224
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 225
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 226
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 227
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "circle",
+          "lineNumber": 228
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 229
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 230
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 231
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "eight",
+          "lineNumber": 232
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 233
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 234
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 235
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "point",
+          "lineNumber": 236
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints_vis",
+          "lineNumber": 237
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "publish_waypoints",
+          "lineNumber": 238
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "string",
+          "lineNumber": 239
+        },
+        {
+          "caller": "traj_start_trigger_callback",
+          "callee": "load_waypoints",
+          "lineNumber": 240
+        },
+        {
+          "caller": "main",
+          "callee": "ros::init",
+          "lineNumber": 245
+        },
+        {
+          "caller": "main",
+          "callee": "param",
+          "lineNumber": 247
+        },
+        {
+          "caller": "main",
+          "callee": "string",
+          "lineNumber": 247
+        },
+        {
+          "caller": "main",
+          "callee": "subscribe",
+          "lineNumber": 248
+        },
+        {
+          "caller": "main",
+          "callee": "subscribe",
+          "lineNumber": 249
+        },
+        {
+          "caller": "main",
+          "callee": "subscribe",
+          "lineNumber": 250
+        },
+        {
+          "caller": "main",
+          "callee": "advertise<nav_msgs::Path>",
+          "lineNumber": 251
+        },
+        {
+          "caller": "main",
+          "callee": "advertise<geometry_msgs::PoseArray>",
+          "lineNumber": 252
+        },
+        {
+          "caller": "main",
+          "callee": "ros::Time",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "ros::spin",
+          "lineNumber": 256
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    }
+  ]
+}

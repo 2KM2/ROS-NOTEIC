@@ -12,6 +12,24 @@
 
 XAUTH_OUT=/tmp/.docker.xauth
 
+# Docker 需要把这个路径作为单个文件挂载；旧版本或手工操作可能留下同名目录。
+# 只自动清理空目录，避免误删用户数据。
+if [ -d "$XAUTH_OUT" ]; then
+  if ! rmdir "$XAUTH_OUT" 2>/dev/null; then
+    # 无权移除时使用固定备用路径，保证后续 docker bind mount 仍指向文件。
+    XAUTH_OUT=/tmp/.docker.xauth-file
+    # 检查备用路径本身是否也是目录
+    if [ -d "$XAUTH_OUT" ]; then
+      if ! rmdir "$XAUTH_OUT" 2>/dev/null; then
+        echo "[x11] 错误: $XAUTH_OUT 也被目录占用且无法移除。" >&2
+        echo "[x11]        请手动运行: sudo rm -rf $XAUTH_OUT" >&2
+        exit 1
+      fi
+    fi
+    echo "[x11] 警告: /tmp/.docker.xauth 被目录占用，改用 $XAUTH_OUT。" >&2
+  fi
+fi
+
 # ---------- 1. 确定 DISPLAY ----------
 if [ -z "${DISPLAY:-}" ]; then
   # 优先从正在运行的 Xwayland / Xorg 进程里读它服务的 display 号

@@ -1,0 +1,13 @@
+{
+  "projectRoot": "/home/zkm/workspace/ROS-NOTEIC",
+  "batchFiles": [
+    {"path": "src/grid_path_searcher/CMakeLists.txt", "language": "txt", "sizeLines": 48, "fileCategory": "docs"},
+    {"path": "src/grid_path_searcher/README.md", "language": "markdown", "sizeLines": 1, "fileCategory": "docs"},
+    {"path": "src/grid_path_searcher/package.xml", "language": "xml", "sizeLines": 26, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "src/grid_path_searcher/CMakeLists.txt": [],
+    "src/grid_path_searcher/README.md": [],
+    "src/grid_path_searcher/package.xml": []
+  }
+}

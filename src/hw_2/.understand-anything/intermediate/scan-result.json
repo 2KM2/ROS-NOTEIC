@@ -1,0 +1,286 @@
+{
+  "name": "hw_2",
+  "description": "HKUST ELEC5660 HW2 的 ROS Noetic catkin 作业，在三维栅格地图上实现 A* / JPS 路径搜索，包含 grid_path_searcher、rviz_plugins 与 waypoint_generator 三个包。",
+  "languages": [
+    "c",
+    "cpp",
+    "launch",
+    "makefile",
+    "markdown",
+    "rviz",
+    "txt",
+    "xml"
+  ],
+  "frameworks": [
+    "ROS",
+    "catkin",
+    "RViz",
+    "Qt",
+    "Eigen",
+    "PCL"
+  ],
+  "files": [
+    {
+      "path": "src/grid_path_searcher/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 48,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/grid_path_searcher/include/Astar_searcher.h",
+      "language": "c",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/backward.hpp",
+      "language": "cpp",
+      "sizeLines": 1989,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/JPS_searcher.h",
+      "language": "c",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/JPS_utils.h",
+      "language": "c",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/include/node.h",
+      "language": "c",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/demo.launch",
+      "language": "launch",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/rviz_config/demo.rviz",
+      "language": "rviz",
+      "sizeLines": 224,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/launch/rviz_config/jps_demo.rviz",
+      "language": "rviz",
+      "sizeLines": 245,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/package.xml",
+      "language": "xml",
+      "sizeLines": 26,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/grid_path_searcher/README.md",
+      "language": "markdown",
+      "sizeLines": 1,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/grid_path_searcher/src/Astar_searcher.cpp",
+      "language": "cpp",
+      "sizeLines": 302,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/demo_node.cpp",
+      "language": "cpp",
+      "sizeLines": 286,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/random_complex_generator.cpp",
+      "language": "cpp",
+      "sizeLines": 232,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/read_only/JPS_searcher.cpp",
+      "language": "cpp",
+      "sizeLines": 268,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/grid_path_searcher/src/read_only/JPS_utils.cpp",
+      "language": "cpp",
+      "sizeLines": 334,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 102,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/rviz_plugins/config/rviz_config.rviz",
+      "language": "rviz",
+      "sizeLines": 1242,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/Makefile",
+      "language": "makefile",
+      "sizeLines": 0,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "src/rviz_plugins/package.xml",
+      "language": "xml",
+      "sizeLines": 30,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/rviz_plugins/plugin_description.xml",
+      "language": "xml",
+      "sizeLines": 30,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/rviz_plugins/src/aerialmap_display.cpp",
+      "language": "cpp",
+      "sizeLines": 538,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/aerialmap_display.h",
+      "language": "c",
+      "sizeLines": 134,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/goal_tool.cpp",
+      "language": "cpp",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/goal_tool.h",
+      "language": "c",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/multi_probmap_display.cpp",
+      "language": "cpp",
+      "sizeLines": 365,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/multi_probmap_display.h",
+      "language": "c",
+      "sizeLines": 114,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/pose_tool.cpp",
+      "language": "cpp",
+      "sizeLines": 167,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/pose_tool.h",
+      "language": "c",
+      "sizeLines": 80,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/probmap_display.cpp",
+      "language": "cpp",
+      "sizeLines": 535,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/rviz_plugins/src/probmap_display.h",
+      "language": "c",
+      "sizeLines": 134,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/waypoint_generator/CMakeLists.txt",
+      "language": "txt",
+      "sizeLines": 35,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "src/waypoint_generator/package.xml",
+      "language": "xml",
+      "sizeLines": 25,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/waypoint_generator/src/sample_waypoints.h",
+      "language": "c",
+      "sizeLines": 212,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/waypoint_generator/src/waypoint_generator.cpp",
+      "language": "cpp",
+      "sizeLines": 258,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 35,
+  "filteredByIgnore": 6,
+  "estimatedComplexity": "moderate",
+  "importMap": {
+    "src/grid_path_searcher/CMakeLists.txt": [],
+    "src/grid_path_searcher/include/Astar_searcher.h": [],
+    "src/grid_path_searcher/include/backward.hpp": [],
+    "src/grid_path_searcher/include/JPS_searcher.h": [],
+    "src/grid_path_searcher/include/JPS_utils.h": [],
+    "src/grid_path_searcher/include/node.h": [],
+    "src/grid_path_searcher/launch/demo.launch": [],
+    "src/grid_path_searcher/launch/rviz_config/demo.rviz": [],
+    "src/grid_path_searcher/launch/rviz_config/jps_demo.rviz": [],
+    "src/grid_path_searcher/package.xml": [],
+    "src/grid_path_searcher/README.md": [],
+    "src/grid_path_searcher/src/Astar_searcher.cpp": [],
+    "src/grid_path_searcher/src/demo_node.cpp": [],
+    "src/grid_path_searcher/src/random_complex_generator.cpp": [],
+    "src/grid_path_searcher/src/read_only/JPS_searcher.cpp": [],
+    "src/grid_path_searcher/src/read_only/JPS_utils.cpp": [],
+    "src/rviz_plugins/CMakeLists.txt": [],
+    "src/rviz_plugins/config/rviz_config.rviz": [],
+    "src/rviz_plugins/Makefile": [],
+    "src/rviz_plugins/package.xml": [],
+    "src/rviz_plugins/plugin_description.xml": [],
+    "src/rviz_plugins/src/aerialmap_display.cpp": [
+      "src/rviz_plugins/src/aerialmap_display.h"
+    ],
+    "src/rviz_plugins/src/aerialmap_display.h": [],
+    "src/rviz_plugins/src/goal_tool.cpp": [
+      "src/rviz_plugins/src/goal_tool.h"
+    ],
+    "src/rviz_plugins/src/goal_tool.h": [],
+    "src/rviz_plugins/src/multi_probmap_display.cpp": [
+      "src/rviz_plugins/src/multi_probmap_display.h"
+    ],
+    "src/rviz_plugins/src/multi_probmap_display.h": [],
+    "src/rviz_plugins/src/pose_tool.cpp": [
+      "src/rviz_plugins/src/pose_tool.h"
+    ],
+    "src/rviz_plugins/src/pose_tool.h": [],
+    "src/rviz_plugins/src/probmap_display.cpp": [
+      "src/rviz_plugins/src/probmap_display.h"
+    ],
+    "src/rviz_plugins/src/probmap_display.h": [],
+    "src/waypoint_generator/CMakeLists.txt": [],
+    "src/waypoint_generator/package.xml": [],
+    "src/waypoint_generator/src/sample_waypoints.h": [],
+    "src/waypoint_generator/src/waypoint_generator.cpp": [
+      "src/waypoint_generator/src/sample_waypoints.h"
+    ]
+  }
+}
