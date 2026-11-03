@@ -58,3 +58,16 @@ target_link_libraries(calib_odom_node
   ${catkin_LIBRARIES}
   ${CSM_LIBRARIES}
 )
+
+if(CATKIN_ENABLE_TESTING)
+  catkin_add_gtest(odom_calib_test
+    test/Odom_Calib_test.cpp
+    src/Odom_Calib.cpp
+  )
+  if(TARGET odom_calib_test)
+    target_link_libraries(odom_calib_test
+      gtest_main
+      ${catkin_LIBRARIES}
+    )
+  endif()
+endif()

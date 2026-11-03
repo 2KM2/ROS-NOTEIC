@@ -18,7 +18,8 @@ public:
     void Set_data_len(int len);
     bool Add_Data(Eigen::Vector3d Odom,Eigen::Vector3d scan);
     Eigen::Matrix3d Solve();
-    bool is_full();
+    bool is_full() const;
+    bool has_data() const;
     void set_data_zero();
 
 private:

@@ -1,3 +1,4 @@
+#include <exception>
 #include <memory>
 #include <string>
 #include "ros/ros.h"
@@ -18,7 +19,7 @@
 #include "stdio.h"
 #include "boost/asio.hpp"   //包含boost库函数
 #include "boost/bind.hpp"
-#include "math.h"
+#include <cmath>
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
@@ -98,8 +99,9 @@ public:
     void SetPIICPParams();
     void LaserScanToLDP(sensor_msgs::LaserScan *pScan,
                                  LDP& ldp);
-    Eigen::Vector3d  PIICPBetweenTwoFrames(LDP& currentLDPScan,
-                                           Eigen::Vector3d tmprPose);
+    bool PIICPBetweenTwoFrames(LDP& currentLDPScan,
+                               const Eigen::Vector3d& initial_pose,
+                               Eigen::Vector3d& relative_pose);
 
 
 };
@@ -233,7 +235,22 @@ Scan2::Scan2()
 //订阅topic表示开始进行标定.
 void Scan2::CalibFlagCallBack(const std_msgs::Empty &msg)
 {
-    Eigen::Matrix3d correct_matrix = Odom_calib.Solve();
+    if(!Odom_calib.has_data())
+    {
+        ROS_WARN("No valid odometry/laser scan pairs have been collected; calibration is skipped.");
+        return;
+    }
+
+    Eigen::Matrix3d correct_matrix;
+    try
+    {
+        correct_matrix = Odom_calib.Solve();
+    }
+    catch(const std::exception& error)
+    {
+        ROS_ERROR("Failed to solve odometry calibration: %s", error.what());
+        return;
+    }
 
     Eigen::Matrix3d tmp_transform_matrix;
 
@@ -283,46 +300,55 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
     if(!getOdomPose(odom_pose, _laserScanMsg->header.stamp))
         return ;
 
-    //首帧只初始化里程计参考位姿，不能构成增量。
+    // 先将每一帧激光转换为 CSM 数据。里程计参考帧和激光参考帧必须始终
+    // 对应同一时刻：即使运动太小而不建立标定样本，也要推进激光参考帧。
+    LDP currentLDP = NULL;
+    LaserScanToLDP(&scan, currentLDP);
+    if(currentLDP == NULL)
+    {
+        ROS_WARN("Received an empty laser scan, resetting the scan-matching reference.");
+        if(m_prevLDP != NULL)
+        {
+            ld_free(m_prevLDP);
+            m_prevLDP = NULL;
+        }
+        return;
+    }
+
+    // 首帧同时建立里程计和激光参考，不能构成相对运动。
     if(!has_previous_odom_pose_)
     {
         cal_delta_distance(odom_pose);
         has_previous_odom_pose_ = true;
+        m_prevLDP = currentLDP;
         return;
     }
 
-    //前后两帧里程计的位姿差
+    // 前后两帧里程计的位姿差；它与 m_prevLDP/currentLDP 表示同一对激光帧。
     d_point_odom = cal_delta_distance(odom_pose);
-
-    //如果运动的距离太短，则不进行处理．
-    if(d_point_odom(0) < 0.05 &&
-       d_point_odom(1) < 0.05 &&
-       d_point_odom(2) < tfRadians(5.0))
+    if(m_prevLDP == NULL)
     {
-        return ;
+        m_prevLDP = currentLDP;
+        return;
     }
 
-    //把当前的激光数据转换为 pl-icp能识别的数据 & 进行矫正
-    //d_point_scan就是用激光计算得到的两帧数据之间的旋转 & 平移
-    d_point_scan.setZero();
-    LDP currentLDP = NULL;
-    if(m_prevLDP != NULL)
+    // 如果平移和转角都很小，则不建立标定样本。但仍用当前帧替换参考帧，使
+    // 下一次 ICP 使用的两帧与 d_point_odom 使用的两次里程计位姿保持同步。
+    // 对局部坐标中的反向运动也必须按绝对值判断，否则后退、右移或顺时针旋转
+    // 会错误地被跳过。
+    if(std::abs(d_point_odom(0)) < 0.05 &&
+       std::abs(d_point_odom(1)) < 0.05 &&
+       std::abs(d_point_odom(2)) < tfRadians(5.0))
     {
-        LaserScanToLDP(&scan,currentLDP);
-        if(currentLDP == NULL)
-        {
-            ROS_WARN("Received an empty laser scan, skipping scan matching.");
-            return;
-        }
-        d_point_scan = PIICPBetweenTwoFrames(currentLDP,d_point_odom);
+        ld_free(m_prevLDP);
+        m_prevLDP = currentLDP;
+        return;
     }
-    else
+
+    // d_point_scan 是两帧激光匹配得到的相对位姿。失败的匹配不会被加入
+    // 标定方程，但 PIICPBetweenTwoFrames 会保留当前帧作为下一次的参考帧。
+    if(!PIICPBetweenTwoFrames(currentLDP, d_point_odom, d_point_scan))
     {
-        LaserScanToLDP(&scan,m_prevLDP);
-        if(m_prevLDP == NULL)
-        {
-            ROS_WARN("Received an empty laser scan, waiting for a valid scan.");
-        }
         return;
     }
 
@@ -348,29 +374,64 @@ void Scan2::scanCallBack(const sensor_msgs::LaserScan::ConstPtr &_laserScanMsg)
     pub_msg(odom_pos_cal,path_odom,odom_path_pub_);
     pub_msg(scan_pos_cal,path_scan,scan_path_pub_);
 
-    //保存具有有效扫描匹配结果的里程计增量。
-    odom_increments.push_back(d_point_odom);
+    // 构造超定方程组。容量达到上限后不再保留额外的路径增量，避免
+    // Solve() 使用的样本集合和重放校正路径时使用的增量集合不一致。
+    if(!Odom_calib.Add_Data(d_point_odom, d_point_scan))
+    {
+        ROS_WARN_THROTTLE(5.0, "Calibration sample capacity reached; ignoring further samples.");
+        return;
+    }
 
-    //构造超定方程组
-    Odom_calib.Add_Data(d_point_odom,d_point_scan);
-    dataCnt++;
+    // 保存与成功写入标定方程的同一组里程计增量。
+    odom_increments.push_back(d_point_odom);
+    ++dataCnt;
 
     std::cout <<"Data Cnt:"<<dataCnt<<std::endl;
 }
 
-//TODO:
-//求解得到两帧数据之间的位姿差
-//即求解当前位姿　在　上一时刻　坐标系中的坐标
-Eigen::Vector3d  cal_delta_distance(Eigen::Vector3d odom_pose)
+/*
+ * 计算当前帧相对于上一帧的里程计增量。
+ *
+ * 输入的 now_pos 与保存的 last_pos 都表示 base_link 在 odom 全局坐标系下的
+ * 绝对位姿 [x, y, yaw]。扫描匹配的输出则表达在上一帧局部坐标系中，因此需要把
+ * odom 坐标系中的位置差转换到上一帧车体坐标系，最终返回：
+ * [前进量, 左移量, 偏航变化量]。
+ */
+Eigen::Vector3d cal_delta_distance(Eigen::Vector3d odom_pose)
 {
+    static Eigen::Vector3d last_pos;
+    static bool has_last_pos = false;
+    const Eigen::Vector3d now_pos = odom_pose;
 
-    static Eigen::Vector3d now_pos,last_pos;
-    Eigen::Vector3d d_pos = Eigen::Vector3d::Zero();  //return value
-    now_pos = odom_pose;
+    // 第一次调用只建立参考位姿；此时没有前一帧，不能计算运动增量。
+    if(!has_last_pos)
+    {
+        last_pos = now_pos;
+        has_last_pos = true;
+        return Eigen::Vector3d::Zero();
+    }
 
-    // TODO: 按作业要求将当前位姿转换到上一帧机器人坐标系，
-    // 并计算相对的 x、y、yaw 增量。
+    // 1. 在 odom 全局坐标系中计算两帧的位置差。
+    const double dx_world = now_pos(0) - last_pos(0);
+    const double dy_world = now_pos(1) - last_pos(1);
 
+    // 2. 使用上一帧的朝向构造 R(-theta_0)。
+    //    R(theta_0) 将局部坐标转到 odom 坐标；其逆 R(-theta_0) 则将
+    //    odom 中的位移转换为上一帧 base_link 坐标中的 [前进, 左移] 位移。
+    const double theta_0 = last_pos(2);
+    const double cos_theta = std::cos(theta_0);
+    const double sin_theta = std::sin(theta_0);
+
+    Eigen::Vector3d d_pos;
+    d_pos(0) = cos_theta * dx_world + sin_theta * dy_world;
+    d_pos(1) = -sin_theta * dx_world + cos_theta * dy_world;
+
+    // 3. 计算偏航角增量，并归一化到 [-pi, pi]。
+    //    atan2(sin(delta), cos(delta)) 能处理从 pi 跳到 -pi 的角度回绕。
+    const double yaw_delta = now_pos(2) - last_pos(2);
+    d_pos(2) = std::atan2(std::sin(yaw_delta), std::cos(yaw_delta));
+
+    // 4. 在所有计算完成后，再将当前绝对位姿保存为下一次调用的参考位姿。
     last_pos = now_pos;
 
     return d_pos;
@@ -474,8 +535,9 @@ void Scan2::LaserScanToLDP(sensor_msgs::LaserScan *pScan,
 
 
 //求两帧之间的icp位姿匹配
-Eigen::Vector3d  Scan2::PIICPBetweenTwoFrames(LDP& currentLDPScan,
-                                              Eigen::Vector3d tmprPose)
+bool Scan2::PIICPBetweenTwoFrames(LDP& currentLDPScan,
+                                  const Eigen::Vector3d& initial_pose,
+                                  Eigen::Vector3d& relative_pose)
 {
     m_prevLDP->odometry[0] = 0.0;
     m_prevLDP->odometry[1] = 0.0;
@@ -493,9 +555,9 @@ Eigen::Vector3d  Scan2::PIICPBetweenTwoFrames(LDP& currentLDPScan,
     m_PIICPParams.laser_ref = m_prevLDP;
     m_PIICPParams.laser_sens = currentLDPScan;
 
-    m_PIICPParams.first_guess[0] = tmprPose(0);
-    m_PIICPParams.first_guess[1] = tmprPose(1);
-    m_PIICPParams.first_guess[2] = tmprPose(2);
+    m_PIICPParams.first_guess[0] = initial_pose(0);
+    m_PIICPParams.first_guess[1] = initial_pose(1);
+    m_PIICPParams.first_guess[2] = initial_pose(2);
 
     m_OutputResult.cov_x_m = 0;
     m_OutputResult.dx_dy1_m = 0;
@@ -503,32 +565,25 @@ Eigen::Vector3d  Scan2::PIICPBetweenTwoFrames(LDP& currentLDPScan,
 
     sm_icp(&m_PIICPParams,&m_OutputResult);
 
-    //nowPose在lastPose中的坐标
-    Eigen::Vector3d  rPose;
-    if(m_OutputResult.valid)
+    const bool matched = m_OutputResult.valid;
+    if(matched)
     {
         //得到两帧激光之间的相对位姿
-        rPose(0)=(m_OutputResult.x[0]);
-        rPose(1)=(m_OutputResult.x[1]);
-        rPose(2)=(m_OutputResult.x[2]);
-
-//        std::cout <<"Iter:"<<m_OutputResult.iterations<<std::endl;
-//        std::cout <<"Corr:"<<m_OutputResult.nvalid<<std::endl;
-//        std::cout <<"Erro:"<<m_OutputResult.error<<std::endl;
-
-//        std::cout <<"PI ICP GOOD"<<std::endl;
+        relative_pose(0) = m_OutputResult.x[0];
+        relative_pose(1) = m_OutputResult.x[1];
+        relative_pose(2) = m_OutputResult.x[2];
     }
     else
     {
         std::cout <<"PI ICP Failed!!!!!!!"<<std::endl;
-        rPose = tmprPose;
     }
 
-    //更新
+    // 无论本次匹配是否成功，都将当前帧作为下一次的参考帧；但仅将成功
+    // 匹配的帧对加入标定样本，避免用里程计初值伪造激光观测。
     ld_free(m_prevLDP);
     m_prevLDP = currentLDPScan;
 
-    return rPose;
+    return matched;
 }
 
 Scan2::~Scan2()
