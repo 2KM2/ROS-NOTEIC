@@ -1,0 +1,17 @@
+<launch>
+  <!-- Keep the default for laser.bag. Use use_sim_time:=false with live data. -->
+  <arg name="use_sim_time" default="true"
+       doc="Use true for rosbag play --clock; use false for live sensor data."/>
+  <param name="use_sim_time" value="$(arg use_sim_time)"/>
+
+  <node name="LaserUndistortion_Node"
+        pkg="LaserUndistortion"
+        type="LaserUndistortion_node"
+        output="screen" />
+
+  <node name="rviz"
+        pkg="rviz"
+        type="rviz"
+        args="-d $(find LaserUndistortion)/launch/LaserMotion.rviz"
+        output="screen" />
+</launch>

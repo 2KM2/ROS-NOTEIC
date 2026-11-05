@@ -33,9 +33,11 @@ fi
 # ---------- 1. 确定 DISPLAY ----------
 if [ -z "${DISPLAY:-}" ]; then
   # 优先从正在运行的 Xwayland / Xorg 进程里读它服务的 display 号
+  # grep 可能因下游 head 提前结束而收到 SIGPIPE；在 pipefail 下不能让
+  # 这种“没有可用图形会话/候选超过一条”的正常情况中止整个启动脚本。
   DETECTED=$(ps -u "$(id -u)" -o args= 2>/dev/null \
              | grep -oE '(Xwayland|Xorg) +:[0-9]+' \
-             | grep -oE ':[0-9]+' | head -1)
+             | grep -oE ':[0-9]+' | head -1 || true)
   # 退而求其次:扫描属于当前用户的 X socket(排除 gdm 登录屏的 :1024+)
   if [ -z "$DETECTED" ]; then
     for s in /tmp/.X11-unix/X*; do
@@ -63,7 +65,7 @@ CANDIDATES=()
 # GNOME/Wayland: 从 Xwayland 进程的 -auth 参数拿到当前会话真正在用的那个文件
 MUTTER_AUTH=$(ps -u "$(id -u)" -o args= 2>/dev/null \
               | grep -oE '\-auth +[^ ]*mutter-Xwaylandauth[^ ]*' \
-              | awk '{print $2}' | head -1)
+              | awk '{print $2}' | head -1 || true)
 [ -n "$MUTTER_AUTH" ] && [ -f "$MUTTER_AUTH" ] && CANDIDATES+=("$MUTTER_AUTH")
 
 [ -f "$HOME/.Xauthority" ] && CANDIDATES+=("$HOME/.Xauthority")
