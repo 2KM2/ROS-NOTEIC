@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(LaserUndistortion)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+## ROS Noetic supports C++14.  This project uses C++14 value initialization
+## and smart-pointer helpers in the ICP scaffold.
+add_compile_options(-std=c++14)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -17,8 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
-find_package(PCL REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common filters registration)
 
 
 ###################################
@@ -31,6 +31,8 @@ find_package(PCL REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}_icp_scaffold
   CATKIN_DEPENDS roscpp tf sensor_msgs champion_nav_msgs pcl_ros pcl_conversions
   DEPENDS PCL
 )
@@ -41,24 +43,36 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
+add_definitions(${PCL_DEFINITIONS})
+
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
 )
 
 message(STATUS "PCL include directories: ${PCL_INCLUDE_DIRS}")
 
-## Declare a C++ executable
-## With catkin_make all packages are built within a single CMake context
-## The recommended prefix ensures that target names across packages don't collide
+## The scaffold keeps registration state, odometry priors, quality gates, and
+## point-cloud preprocessing outside the student ICP solver TODO.
+add_library(${PROJECT_NAME}_icp_scaffold
+  src/icp_odometry.cpp
+)
+
+add_dependencies(${PROJECT_NAME}_icp_scaffold ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(${PROJECT_NAME}_icp_scaffold
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
+## Existing homework node.  Its name stays unchanged so the launch file works.
 add_executable(${PROJECT_NAME}_node src/LidarMotionUndistortion.cpp)
 
-
-## Specify libraries to link a library or executable target against
 add_dependencies(${PROJECT_NAME}_node ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(${PROJECT_NAME}_node
+  ${PROJECT_NAME}_icp_scaffold
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
 )
@@ -78,16 +92,17 @@ target_link_libraries(${PROJECT_NAME}_node
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS ${PROJECT_NAME}_node
+install(TARGETS ${PROJECT_NAME}_node ${PROJECT_NAME}_icp_scaffold
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+## Install public scaffold interfaces for later ICP / point-to-line extensions.
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.hpp"
+)
 
 ## Install launch files and the RViz configuration with the package.
 install(DIRECTORY launch/
