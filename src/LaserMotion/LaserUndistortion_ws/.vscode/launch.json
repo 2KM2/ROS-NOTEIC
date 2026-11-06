@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "LaserMotion: 调试去畸变节点（Docker）",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/workspace/src/LaserMotion/LaserUndistortion_ws/devel/lib/LaserUndistortion/LaserUndistortion_node",
+      "args": [],
+      "stopAtEntry": false,
+      "preLaunchTask": "LaserMotion: Debug 构建节点",
+      "cwd": "/workspace/src/LaserMotion/LaserUndistortion_ws",
+      "environment": [
+        {
+          "name": "ROS_MASTER_URI",
+          "value": "http://localhost:11311"
+        },
+        {
+          "name": "ROS_HOSTNAME",
+          "value": "localhost"
+        }
+      ],
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable GDB pretty printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Do not paginate debugger output",
+          "text": "set pagination off",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Show at most 20 container elements",
+          "text": "set print elements 20",
+          "ignoreFailures": true
+        }
+      ],
+      "sourceFileMap": {
+        "/workspace": "${workspaceFolder}/../../.."
+      },
+      "externalConsole": false
+    }
+  ]
+}

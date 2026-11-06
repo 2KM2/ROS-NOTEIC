@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "LaserMotion: Debug 构建消息包",
+      "type": "shell",
+      "command": "source /opt/ros/noetic/setup.bash && catkin_make -DCMAKE_BUILD_TYPE=Debug",
+      "options": {
+        "cwd": "/workspace/src/LaserMotion/champion_nav_msgs"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build"
+    },
+    {
+      "label": "LaserMotion: Debug 构建节点",
+      "type": "shell",
+      "command": "source /opt/ros/noetic/setup.bash && source /workspace/src/LaserMotion/champion_nav_msgs/devel/setup.bash && catkin_make -DCMAKE_BUILD_TYPE=Debug",
+      "options": {
+        "cwd": "/workspace/src/LaserMotion/LaserUndistortion_ws"
+      },
+      "problemMatcher": ["$gcc"],
+      "dependsOn": "LaserMotion: Debug 构建消息包",
+      "dependsOrder": "sequence",
+      "group": "build"
+    }
+  ]
+}

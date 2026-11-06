@@ -20,3 +20,10 @@ log
 
 # 原始 ROS bag 数据文件体积较大，仅保留在本地或通过外部链接分发。
 *.bag
+
+# VS Code 调试配置通常是个人偏好；LaserMotion workspace 的可复现调试配置例外。
+.vscode/
+!src/LaserMotion/LaserUndistortion_ws/.vscode/
+!src/LaserMotion/LaserUndistortion_ws/.vscode/launch.json
+!src/LaserMotion/LaserUndistortion_ws/.vscode/tasks.json
+!src/LaserMotion/LaserUndistortion_ws/.vscode/extensions.json
